@@ -1,0 +1,30 @@
+[
+    {
+        "codigo": "C001",
+        "nombre": "Consumidor Final",
+        "adicional": "",
+        "descuento": 0,
+        "saldo": 0.0
+    },
+    {
+        "codigo": "C002",
+        "nombre": "Juan Perez",
+        "adicional": "RUC: 12345678-9",
+        "descuento": 5,
+        "saldo": 0.0
+    },
+    {
+        "codigo": "C003",
+        "nombre": "Constructora ABC",
+        "adicional": "Tel: 021-555-444",
+        "descuento": 10,
+        "saldo": 56.025
+    },
+    {
+        "codigo": "C004",
+        "nombre": "Maria Gonzalez",
+        "adicional": "Dir: Av. Siempre Viva 123",
+        "descuento": 0,
+        "saldo": 0.0
+    }
+]

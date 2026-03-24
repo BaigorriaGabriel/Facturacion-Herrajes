@@ -1,0 +1,102 @@
+[
+    {
+        "codigo": "P001",
+        "descripcion": "Martillo de Carpintero",
+        "precio": 15.5
+    },
+    {
+        "codigo": "P002",
+        "descripcion": "Destornillador Phillips #2",
+        "precio": 5.0
+    },
+    {
+        "codigo": "P003",
+        "descripcion": "Caja de 100 Clavos de 2 pulgadas",
+        "precio": 3.25
+    },
+    {
+        "codigo": "P004",
+        "descripcion": "Cinta Metrica 5m",
+        "precio": 8.0
+    },
+    {
+        "codigo": "P005",
+        "descripcion": "Pinza de Electricista",
+        "precio": 12.75
+    },
+    {
+        "codigo": "P006",
+        "descripcion": "Bolsa de Cemento 25kg",
+        "precio": 7.5
+    },
+    {
+        "codigo": "P007",
+        "descripcion": "Lata de Pintura Blanca 1L",
+        "precio": 10.0
+    },
+    {
+        "codigo": "P008",
+        "descripcion": "Tubo PVC 1/2 pulgada x 3m",
+        "precio": 2.5
+    },
+    {
+        "codigo": "1233",
+        "descripcion": "123",
+        "precio": 123.0
+    },
+    {
+        "codigo": "4",
+        "descripcion": "4",
+        "precio": 4.0
+    },
+    {
+        "codigo": "12444",
+        "descripcion": "sdf",
+        "precio": 44.0
+    },
+    {
+        "codigo": "fe",
+        "descripcion": "43",
+        "precio": 34.0
+    },
+    {
+        "codigo": "54",
+        "descripcion": "45",
+        "precio": 45.0
+    },
+    {
+        "codigo": "56",
+        "descripcion": "65",
+        "precio": 56.0
+    },
+    {
+        "codigo": "67",
+        "descripcion": "76",
+        "precio": 76.0
+    },
+    {
+        "codigo": "87",
+        "descripcion": "98",
+        "precio": 0.009
+    },
+    {
+        "codigo": "76",
+        "descripcion": "56",
+        "precio": 54.0
+    },
+    {
+        "codigo": "2534",
+        "descripcion": "2543",
+        "precio": 2543.0
+    },
+    {
+        "codigo": "25344",
+        "descripcion": "2345",
+        "precio": 2534.0
+    },
+    {
+        "codigo": "545454",
+        "descripcion": "45454",
+        "precio": 45.0
+    }
+]

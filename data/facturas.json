@@ -1,0 +1,19 @@
+[
+    {
+        "numero": 1,
+        "cliente_codigo": "C003",
+        "fecha": "2026-03-23",
+        "items": [
+            {
+                "producto_codigo": "P005",
+                "cantidad": 3,
+                "precio_unitario": 12.75
+            },
+            {
+                "producto_codigo": "P004",
+                "cantidad": 3,
+                "precio_unitario": 8.0
+            }
+        ]
+    }
+]
