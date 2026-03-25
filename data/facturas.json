@@ -3,6 +3,7 @@
         "numero": 1,
         "cliente_codigo": "C003",
         "fecha": "2026-03-23",
+        "repartidor": "FRANCO",
         "items": [
             {
                 "producto_codigo": "P005",
@@ -11,8 +12,26 @@
             },
             {
                 "producto_codigo": "P004",
-                "cantidad": 3,
+                "cantidad": 4,
                 "precio_unitario": 8.0
+            }
+        ]
+    },
+    {
+        "numero": 2,
+        "cliente_codigo": "C003",
+        "fecha": "2026-03-24",
+        "repartidor": "AGUSTIN",
+        "items": [
+            {
+                "producto_codigo": "P006",
+                "cantidad": 5,
+                "precio_unitario": 7.5
+            },
+            {
+                "producto_codigo": "1233",
+                "cantidad": 5,
+                "precio_unitario": 123.0
             }
         ]
     }
