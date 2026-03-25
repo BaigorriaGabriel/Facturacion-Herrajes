@@ -24,17 +24,41 @@ class ProductosView(ttk.Frame):
 
         self.search_vars = {}
         cols = ("Codigo", "Descripcion", "Precio")
-
-        for col in cols:
+        col_widths = {"Codigo": 80, "Descripcion": 250, "Precio": 120}
+        
+        # Configurar columnas con grid basado en anchos de tabla
+        for idx, col in enumerate(cols):
+            search_frame.grid_columnconfigure(idx, weight=col_widths[col])
+        
+        for idx, col in enumerate(cols):
             self.search_vars[col] = tk.StringVar()
-            search_entry = ttk.Entry(search_frame, textvariable=self.search_vars[col], width=15)
-            search_entry.pack(side="left", fill="x", expand=True)
+            search_entry = ttk.Entry(search_frame, textvariable=self.search_vars[col])
+            search_entry.grid(row=0, column=idx, sticky="ew", padx=2)
             search_entry.bind("<KeyRelease>", lambda e: self.actualizar_lista())
+        
+        # Espacio para scrollbar
+        search_frame.grid_columnconfigure(len(cols), weight=0, minsize=17)
 
-        self.tree = ttk.Treeview(self, columns=cols, show="headings")
+        # Layout con grid
+        table_frame = ttk.Frame(self)
+        table_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        table_frame.grid_rowconfigure(0, weight=1)
+        table_frame.grid_columnconfigure(0, weight=1)
+        
+        self.tree = ttk.Treeview(table_frame, columns=cols, show="headings")
         for col in cols: self.tree.heading(col, text=col.replace("Descripcion", "Descripción"))
         self.tree.heading("Precio", text="Precio Unitario")
-        self.tree.pack(fill="both", expand=True, padx=10, pady=10)
+        # Configurar ancho de columnas
+        self.tree.column("Codigo", width=80, anchor="center")
+        self.tree.column("Descripcion", width=250, anchor="w")
+        self.tree.column("Precio", width=120, anchor="e")
+        # Agregar scrollbars como miembros de table_frame
+        vsb = ttk.Scrollbar(table_frame, orient="vertical", command=self.tree.yview)
+        hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=self.tree.xview)
+        self.tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+        self.tree.grid(row=0, column=0, sticky="nsew")
+        vsb.grid(row=0, column=1, sticky="ns")
+        hsb.grid(row=1, column=0, sticky="ew")
         self.tree.bind("<<TreeviewSelect>>", self._on_tree_select)
     
     def _on_tree_select(self, event=None):

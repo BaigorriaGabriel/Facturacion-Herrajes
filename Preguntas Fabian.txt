@@ -18,3 +18,15 @@ que le ponen NO al campo del descuento para que en esa factura no se le aplique 
 Imprime la factura para que Santi arme el pedido en base a eso y despues le llega esa factura al cliente? o Cumple ademas otro rol la factura?
 
 como hacen con el tema de los aumentos? aumentan todos los productos de una o 1x1? o como?
+
+
+QUEDA POR HACER:
+
+El tema de los aumentos, vi que talvez podriamos agregar un Tipo de producto a Productos y una
+interfaz de aumentos para aumentar a TODOS o a todos los productos con el Tipo seleccionado
+
+Tema de los saldos, ver si modifican el saldo manualmente o quieren hacer una interfaz de imputar pagos
+donde cada vez que les pagan lo suben ahi y se actualiza el saldo del cliente
+
+Ver el tema de los descuentos, si quieren que en la carga/modifiacion de cliente se elija si tiene los
+dos 8% o que se elija manual como esta ahora.

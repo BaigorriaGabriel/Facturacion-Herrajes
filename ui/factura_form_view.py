@@ -26,9 +26,10 @@ class FacturaFormView(ttk.Frame):
     def _build_widgets(self):
         main_frame = ttk.Frame(self, padding="10"); main_frame.pack(fill="both", expand=True)
         main_frame.rowconfigure(2, weight=1)
-        main_frame.columnconfigure(1, weight=1)
+        main_frame.columnconfigure(0, weight=0, minsize=350)
+        main_frame.columnconfigure(1, weight=1, minsize=500)
 
-        left_frame = ttk.Frame(main_frame); left_frame.grid(row=0, column=0, rowspan=3, sticky="nsw", padx=(0, 10))
+        left_frame = ttk.Frame(main_frame); left_frame.grid(row=0, column=0, rowspan=3, sticky="nsew", padx=(0, 10))
 
         ttk.Button(left_frame, text="< Volver", command=self.cancelar).pack(anchor="w", pady=(0,10))
         
@@ -80,15 +81,29 @@ class FacturaFormView(ttk.Frame):
 
         right_frame = ttk.Frame(main_frame); right_frame.grid(row=0, column=1, rowspan=3, sticky="nsew")
         right_frame.rowconfigure(1, weight=1)
+        right_frame.columnconfigure(0, weight=1)
 
         ttk.Label(right_frame, text="Detalle de Factura", style="Heading.TLabel").pack()
         
         cols = ("Producto", "Cantidad", "Precio Unit.", "Subtotal")
-        self.items_tree = ttk.Treeview(right_frame, columns=cols, show="headings"); self.items_tree.pack(fill="both", expand=True, pady=10)
+        # Layout con grid para tabla y scrollbars
+        table_frame = ttk.Frame(right_frame)
+        table_frame.pack(fill="both", expand=True, pady=10, padx=10)
+        table_frame.grid_rowconfigure(0, weight=1)
+        table_frame.grid_columnconfigure(0, weight=1)
+        
+        self.items_tree = ttk.Treeview(table_frame, columns=cols, show="headings")
         self.items_tree.bind("<<TreeviewSelect>>", self._on_tree_select)
         for col in cols: self.items_tree.heading(col, text=col)
+        # Agregar scrollbars
+        vsb = ttk.Scrollbar(table_frame, orient="vertical", command=self.items_tree.yview)
+        hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=self.items_tree.xview)
+        self.items_tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+        self.items_tree.grid(row=0, column=0, sticky="nsew")
+        vsb.grid(row=0, column=1, sticky="ns")
+        hsb.grid(row=1, column=0, sticky="ew")
 
-        actions_frame = ttk.Frame(right_frame); actions_frame.pack(fill="x", pady=10)
+        actions_frame = ttk.Frame(right_frame); actions_frame.pack(fill="x", pady=10, padx=10)
         self.btn_quitar_item = ttk.Button(actions_frame, text="Quitar Producto Seleccionado", command=self.quitar_item, style="Danger.TButton", state="disabled")
         self.btn_quitar_item.pack(side="left", padx=5)
         ttk.Button(actions_frame, text="Guardar Factura", command=self.guardar_factura, style="Accent.TButton").pack(side="right", padx=5)

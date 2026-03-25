@@ -38,30 +38,6 @@
         ]
     },
     {
-        "numero": 5,
-        "cliente_codigo": "fer",
-        "fecha": "2026-03-25",
-        "repartidor": "FABRICIO",
-        "dia_reparto": "",
-        "items": [
-            {
-                "producto_codigo": "ppp",
-                "cantidad": 1,
-                "precio_unitario": 7090.0
-            },
-            {
-                "producto_codigo": "P007",
-                "cantidad": 100,
-                "precio_unitario": 10.0
-            },
-            {
-                "producto_codigo": "P002",
-                "cantidad": 11,
-                "precio_unitario": 5.0
-            }
-        ]
-    },
-    {
         "numero": 6,
         "cliente_codigo": "C001",
         "fecha": "2026-03-25",
@@ -110,6 +86,44 @@
                 "producto_codigo": "12444",
                 "cantidad": 14,
                 "precio_unitario": 44.0
+            }
+        ]
+    },
+    {
+        "numero": 9,
+        "cliente_codigo": "SOD",
+        "fecha": "2026-03-25",
+        "repartidor": "EDUARDO",
+        "dia_reparto": "S\u00e1bado",
+        "items": [
+            {
+                "producto_codigo": "P002",
+                "cantidad": 12,
+                "precio_unitario": 5.0
+            },
+            {
+                "producto_codigo": "P003",
+                "cantidad": 12,
+                "precio_unitario": 3.25
+            },
+            {
+                "producto_codigo": "P001",
+                "cantidad": 7,
+                "precio_unitario": 15.5
+            }
+        ]
+    },
+    {
+        "numero": 10,
+        "cliente_codigo": "SOD",
+        "fecha": "2026-03-25",
+        "repartidor": "EDUARDO",
+        "dia_reparto": "Mi\u00e9rcoles",
+        "items": [
+            {
+                "producto_codigo": "P004",
+                "cantidad": 1,
+                "precio_unitario": 555.0
             }
         ]
     }

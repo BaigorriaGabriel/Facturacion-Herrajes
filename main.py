@@ -47,7 +47,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Sistema de Facturación")
-        self.geometry("1024x768")
+        self.geometry("1400x900")
+        self.minsize(1200, 700)
 
         self._setup_styles()
         
