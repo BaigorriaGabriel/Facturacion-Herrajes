@@ -24,7 +24,7 @@ class FacturasView(ttk.Frame):
         search_frame.pack(fill="x", padx=10, pady=5)
 
         self.search_vars = {}
-        cols = ("Numero", "Fecha", "Cliente", "Repartidor", "Total")
+        cols = ("Numero", "Fecha", "Cliente", "Repartidor", "Dia de Reparto", "Total")
 
         for col in cols:
             self.search_vars[col] = tk.StringVar()
@@ -66,13 +66,14 @@ class FacturasView(ttk.Frame):
                 search_terms["Fecha"] in f.fecha.strftime('%d-%m-%Y'),
                 search_terms["Cliente"] in cliente_nombre,
                 search_terms["Repartidor"] in f.repartidor.lower(),
+                search_terms["Dia de Reparto"] in f.dia_reparto.lower(),
                 search_terms["Total"] in f"{f.total:.2f}"
             )):
                 facturas_filtradas.append(f)
 
         for f in facturas_filtradas:
             cliente_nombre = f.cliente.nombre if f.cliente else "N/A"
-            self.tree.insert("", "end", values=(f.numero, f.fecha.strftime('%d-%m-%Y'), cliente_nombre, f.repartidor, f"{f.total:.2f}"))
+            self.tree.insert("", "end", values=(f.numero, f.fecha.strftime('%d-%m-%Y'), cliente_nombre, f.repartidor, f.dia_reparto, f"{f.total:.2f}"))
         
         self._on_tree_select()
 

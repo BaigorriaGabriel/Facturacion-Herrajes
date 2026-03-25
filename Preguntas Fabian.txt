@@ -4,12 +4,13 @@ Que campos necesita de cada entidad?
 
 Necesita guardar las facturas?
 
-Como funciona el saldo de los clientes? 
+Como funciona el saldo de los clientes? AHORA: 
 
 Cuando imprime en excel, ya imprime la factura con el formato de los pedidos? o se hace de una forma diferente?
 
 les sirve que al momento de cargar un cliente se le asigne un ENTREGADOR a ese cliente? 
 O prefieren que se siga eligiendo manual al momento de crear la factura?
+EL REPARTIDOR SE INGRESA MEDIANTE TEXTO AL MOMENTO DE CREAR/EDITAR LA FACTURA
 
 Hay casos en los que por mas que el cliente tenga Descuento, no se le aplique en ciertas facturas? por ejemplo, Hay veces
 que le ponen NO al campo del descuento para que en esa factura no se le aplique el descuento?

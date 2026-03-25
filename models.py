@@ -56,11 +56,12 @@ class FacturaItem:
         return None
 
 class Factura:
-    def __init__(self, cliente, numero_factura=None, repartidor=""):
+    def __init__(self, cliente, numero_factura=None, repartidor="", dia_reparto=""):
         self.numero = numero_factura
         self.cliente = cliente
         self.fecha = datetime.date.today()
         self.repartidor = repartidor
+        self.dia_reparto = dia_reparto
         self.items = []
         self.subtotal_general = 0.0
         self.total = 0.0
@@ -94,6 +95,7 @@ class Factura:
             "cliente_codigo": self.cliente.codigo if self.cliente else None,
             "fecha": self.fecha.isoformat(),
             "repartidor": self.repartidor,
+            "dia_reparto": self.dia_reparto,
             "items": [item.to_dict() for item in self.items]
         }
 
@@ -103,7 +105,7 @@ class Factura:
         # This dependency will be handled by the repository/service layer later.
         cliente = next((c for c in clientes if c.codigo == data["cliente_codigo"]), None)
         if cliente:
-            factura = Factura(cliente, numero_factura=data["numero"], repartidor=data.get("repartidor", ""))
+            factura = Factura(cliente, numero_factura=data["numero"], repartidor=data.get("repartidor", ""), dia_reparto=data.get("dia_reparto", ""))
             factura.fecha = datetime.date.fromisoformat(data["fecha"])
             
             factura.items = []

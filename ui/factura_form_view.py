@@ -48,6 +48,13 @@ class FacturaFormView(ttk.Frame):
         self.repartidor_var = tk.StringVar()
         ttk.Entry(repartidor_frame, textvariable=self.repartidor_var).pack(fill="x")
 
+        dia_reparto_frame = ttk.LabelFrame(left_frame, text="Día de Reparto", padding="10")
+        dia_reparto_frame.pack(fill="x", pady=10)
+        self.dia_reparto_var = tk.StringVar()
+        dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+        self.dia_reparto_combobox = ttk.Combobox(dia_reparto_frame, textvariable=self.dia_reparto_var, values=dias_semana, state="readonly")
+        self.dia_reparto_combobox.pack(fill="x")
+
         item_frame = ttk.LabelFrame(left_frame, text="Buscar Producto", padding="10"); item_frame.pack(fill="x", pady=20)
         self.producto_search_var = tk.StringVar()
         self.producto_search = ttk.Entry(item_frame, textvariable=self.producto_search_var)
@@ -200,6 +207,7 @@ class FacturaFormView(ttk.Frame):
     def limpiar_formulario(self):
         self.factura_actual = None; self.editing = False
         self.cliente_search_var.set(""); self.producto_search_var.set(""); self.repartidor_var.set("")
+        self.dia_reparto_var.set("")
         self.cliente_listbox.pack_forget(); self.producto_listbox.pack_forget()
         self.lbl_descuento.config(text="Descuento: -"); self.lbl_saldo.config(text="Saldo Actual: -")
         self.lbl_precio_unitario.config(text="Precio: -"); self.cantidad_var.set(1)
@@ -216,6 +224,7 @@ class FacturaFormView(ttk.Frame):
             self.cliente_search.config(state="disabled")
 
         self.repartidor_var.set(self.factura_actual.repartidor)
+        self.dia_reparto_var.set(self.factura_actual.dia_reparto)
         self.actualizar_lista_items()
         self.actualizar_totales()
     
@@ -225,6 +234,7 @@ class FacturaFormView(ttk.Frame):
         
         # Populate the object with the latest data from the form
         self.factura_actual.repartidor = self.repartidor_var.get()
+        self.factura_actual.dia_reparto = self.dia_reparto_var.get()
         
         try:
             if self.editing:

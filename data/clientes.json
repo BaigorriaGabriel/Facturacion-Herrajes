@@ -11,7 +11,7 @@
         "nombre": "Juan Perez",
         "adicional": "RUC: 12345678-9",
         "descuento": 5,
-        "saldo": 0.0
+        "saldo": 1071.3625
     },
     {
         "codigo": "C004",
@@ -25,7 +25,7 @@
         "nombre": "Marcos Pereyra",
         "adicional": "Chile 902",
         "descuento": 25.0,
-        "saldo": 5115.0
+        "saldo": 5000.0
     },
     {
         "codigo": "Rub700",
@@ -40,12 +40,5 @@
         "adicional": "-",
         "descuento": 12.0,
         "saldo": 8090.0
-    },
-    {
-        "codigo": "fer",
-        "nombre": "fernandop",
-        "adicional": "moronp",
-        "descuento": 22.0,
-        "saldo": 6810.2
     }
 ]
