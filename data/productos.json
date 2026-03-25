@@ -20,24 +20,19 @@
         "precio": 555.0
     },
     {
-        "codigo": "P005",
-        "descripcion": "Pinza de Electricista",
-        "precio": 12.75
-    },
-    {
         "codigo": "P006",
         "descripcion": "Bolsa de Cemento 25kg",
         "precio": 7.5
     },
     {
         "codigo": "P007",
-        "descripcion": "Lata de Pintura Blanca 1L",
-        "precio": 10.0
+        "descripcion": "Lata de Pintura Blan",
+        "precio": 800000.0
     },
     {
         "codigo": "P008",
-        "descripcion": "Tubo PVC 1/2 pulgada x 3m",
-        "precio": 2.5
+        "descripcion": "Tubo PVC 1/2 pul",
+        "precio": 32.0
     },
     {
         "codigo": "1233",
@@ -65,19 +60,9 @@
         "precio": 45.0
     },
     {
-        "codigo": "56",
-        "descripcion": "65",
-        "precio": 56.0
-    },
-    {
         "codigo": "67",
         "descripcion": "76",
         "precio": 76.0
-    },
-    {
-        "codigo": "87",
-        "descripcion": "98",
-        "precio": 0.009
     },
     {
         "codigo": "76",
@@ -98,5 +83,20 @@
         "codigo": "545454",
         "descripcion": "45454",
         "precio": 45.0
+    },
+    {
+        "codigo": "Rue80x27",
+        "descripcion": "Rueda 80cm",
+        "precio": 12500.0
+    },
+    {
+        "codigo": "ppp",
+        "descripcion": "ppp",
+        "precio": 7090.0
+    },
+    {
+        "codigo": "P005",
+        "descripcion": "700",
+        "precio": 12.0
     }
 ]

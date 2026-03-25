@@ -4,7 +4,7 @@
         "nombre": "Consumidor Final",
         "adicional": "",
         "descuento": 0,
-        "saldo": 0.0
+        "saldo": 9607226.25
     },
     {
         "codigo": "C002",
@@ -14,17 +14,38 @@
         "saldo": 0.0
     },
     {
-        "codigo": "C003",
-        "nombre": "Constructora ABC",
-        "adicional": "Tel: 021-555-444",
-        "descuento": 10,
-        "saldo": 643.275
-    },
-    {
         "codigo": "C004",
         "nombre": "Maria Gonzalez",
         "adicional": "Dir: Av. Siempre Viva 123",
         "descuento": 0,
         "saldo": 0.0
+    },
+    {
+        "codigo": "Mar902",
+        "nombre": "Marcos Pereyra",
+        "adicional": "Chile 902",
+        "descuento": 25.0,
+        "saldo": 5115.0
+    },
+    {
+        "codigo": "Rub700",
+        "nombre": "Ruben",
+        "adicional": "Alvear 700",
+        "descuento": 10.0,
+        "saldo": 0.0
+    },
+    {
+        "codigo": "ppp",
+        "nombre": "pedro",
+        "adicional": "-",
+        "descuento": 12.0,
+        "saldo": 8090.0
+    },
+    {
+        "codigo": "fer",
+        "nombre": "fernandop",
+        "adicional": "moronp",
+        "descuento": 22.0,
+        "saldo": 6810.2
     }
 ]

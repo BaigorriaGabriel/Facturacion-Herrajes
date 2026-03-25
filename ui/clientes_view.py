@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from models import CLIENTES_MODEL, Cliente
+from models import Cliente
 
 class ClientesView(ttk.Frame):
     def __init__(self, parent, controller):
@@ -51,7 +51,8 @@ class ClientesView(ttk.Frame):
     def actualizar_lista(self):
         self.tree.delete(*self.tree.get_children())
         
-        clientes = CLIENTES_MODEL.obtener_todos()
+        # Use the service to get data
+        clientes = self.controller.cliente_service.get_all_clients()
         
         search_terms = {col: var.get().lower() for col, var in self.search_vars.items()}
         
@@ -63,42 +64,71 @@ class ClientesView(ttk.Frame):
         for c in clientes_filtrados:
             self.tree.insert("", "end", values=(c.codigo, c.nombre, c.adicional, c.descuento, f"{c.saldo:.2f}"))
         self._on_tree_select()
-    def open_form_cliente(self, cliente=None): FormCliente(self, cliente)
+
+    def open_form_cliente(self, cliente=None): 
+        # Pass the controller to the form
+        FormCliente(self, self.controller, cliente)
+
     def editar_cliente(self):
-        if i := self.tree.selection():
-            c = next((c for c in CLIENTES_MODEL.obtener_todos() if c.codigo == self.tree.item(i[0], "values")[0]), None)
-            if c: self.open_form_cliente(c)
+        if not self.tree.selection():
+            return
+        selected_item = self.tree.selection()[0]
+        codigo_cliente = self.tree.item(selected_item, "values")[0]
+        
+        # Find the client object using the service
+        cliente = next((c for c in self.controller.cliente_service.get_all_clients() if c.codigo == codigo_cliente), None)
+        
+        if cliente: 
+            self.open_form_cliente(cliente)
+
     def eliminar_cliente(self):
-        if i := self.tree.selection():
-            if messagebox.askyesno("Confirmar", "¿Eliminar cliente seleccionado?", parent=self):
-                CLIENTES_MODEL.eliminar(self.tree.item(i[0], "values")[0]); self.actualizar_lista()
+        if not self.tree.selection():
+            return
+        selected_item = self.tree.selection()[0]
+        codigo_cliente = self.tree.item(selected_item, "values")[0]
+
+        if messagebox.askyesno("Confirmar", f"¿Eliminar cliente {codigo_cliente}?"):
+            self.controller.cliente_service.delete_client(codigo_cliente)
+            self.actualizar_lista()
 
 class FormCliente(tk.Toplevel):
-    def __init__(self, parent, cliente=None):
+    def __init__(self, parent, controller, cliente=None):
         super().__init__(parent)
-        self.transient(parent); self.grab_set()
-        self.title("Formulario de Cliente"); self.geometry("400x350")
-        self.parent = parent; self.cliente_a_editar = cliente
+        self.transient(parent)
+        self.grab_set()
+        self.title("Formulario de Cliente")
+        self.geometry("400x350")
+        
+        self.parent = parent
+        self.controller = controller # Store the controller
+        self.cliente_a_editar = cliente
         
         self._build_widgets()
-        if cliente: self.cargar_datos_cliente()
+        if cliente: 
+            self.cargar_datos_cliente()
 
     def _build_widgets(self):
-        form = ttk.Frame(self, padding="20"); form.pack(expand=True, fill="both")
+        form = ttk.Frame(self, padding="20")
+        form.pack(expand=True, fill="both")
         form.columnconfigure(1, weight=1)
         
-        # Campos
-        self.codigo_var = tk.StringVar(); self.nombre_var = tk.StringVar()
-        self.adicional_var = tk.StringVar(); self.descuento_var = tk.DoubleVar()
+        self.codigo_var = tk.StringVar()
+        self.nombre_var = tk.StringVar()
+        self.adicional_var = tk.StringVar()
+        self.descuento_var = tk.DoubleVar()
         self.saldo_var = tk.DoubleVar()
         
         self.codigo_entry = ttk.Entry(form, textvariable=self.codigo_var)
+        self.saldo_entry = ttk.Entry(form, textvariable=self.saldo_var)
 
-        fields = {"Código:": self.codigo_entry, "Nombre:": ttk.Entry(form, textvariable=self.nombre_var),
-                  "Dato Adicional:": ttk.Entry(form, textvariable=self.adicional_var),
-                  "Descuento (%):": ttk.Entry(form, textvariable=self.descuento_var),
-                  "Saldo ($):": ttk.Entry(form, textvariable=self.saldo_var)}
-
+        fields = {
+            "Código:": self.codigo_entry,
+            "Nombre:": ttk.Entry(form, textvariable=self.nombre_var),
+            "Dato Adicional:": ttk.Entry(form, textvariable=self.adicional_var),
+            "Descuento (%):": ttk.Entry(form, textvariable=self.descuento_var),
+            "Saldo ($):": self.saldo_entry
+        }
+        
         for i, (text, widget) in enumerate(fields.items()):
             ttk.Label(form, text=text).grid(row=i, column=0, sticky="w", pady=5, padx=5)
             widget.grid(row=i, column=1, sticky="ew", pady=5, padx=5)
@@ -107,23 +137,38 @@ class FormCliente(tk.Toplevel):
 
     def cargar_datos_cliente(self):
         c = self.cliente_a_editar
-        self.codigo_var.set(c.codigo); self.codigo_entry.config(state="disabled")
-        self.nombre_var.set(c.nombre); self.adicional_var.set(c.adicional)
-        self.descuento_var.set(c.descuento); self.saldo_var.set(c.saldo)
+        self.codigo_var.set(c.codigo)
+        self.codigo_entry.config(state="disabled") # Don't allow editing the primary key
+        self.nombre_var.set(c.nombre)
+        self.adicional_var.set(c.adicional)
+        self.descuento_var.set(c.descuento)
+        self.saldo_var.set(c.saldo)
 
     def guardar_cliente(self):
         try:
-            codigo, nombre, adicional, descuento, saldo = (self.codigo_var.get().strip(), self.nombre_var.get().strip(),
-                                                           self.adicional_var.get().strip(), self.descuento_var.get(), self.saldo_var.get())
-            if not codigo or not nombre: raise ValueError("Código y Nombre son obligatorios.")
+            # Read all variables from the form first
+            codigo = self.codigo_var.get().strip()
+            nombre = self.nombre_var.get().strip()
+            adicional = self.adicional_var.get().strip()
+            descuento = self.descuento_var.get()
+            saldo = self.saldo_var.get()
+            
+            if not codigo or not nombre:
+                raise ValueError("Código y Nombre son obligatorios.")
+
         except (tk.TclError, ValueError) as e:
             messagebox.showerror("Error de validación", str(e), parent=self)
             return
 
-        if self.cliente_a_editar:
-            CLIENTES_MODEL.actualizar(codigo, nombre, adicional, descuento, saldo)
-        elif not CLIENTES_MODEL.agregar(Cliente(codigo, nombre, adicional, descuento, saldo)):
-            messagebox.showerror("Error", "El código de cliente ya existe.", parent=self)
+        try:
+            if self.cliente_a_editar:
+                self.controller.cliente_service.update_client(codigo, nombre, adicional, descuento, saldo)
+            else:
+                self.controller.cliente_service.create_client(codigo, nombre, adicional, descuento, saldo)
+            
+            self.parent.actualizar_lista()
+            self.destroy()
+
+        except ValueError as e:
+            messagebox.showerror("Error", str(e), parent=self)
             return
-        
-        self.parent.actualizar_lista(); self.destroy()

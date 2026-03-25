@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from models import PRODUCTOS_MODEL, Producto
+from models import Producto
 
 class ProductosView(ttk.Frame):
     def __init__(self, parent, controller):
@@ -51,7 +51,7 @@ class ProductosView(ttk.Frame):
     def actualizar_lista(self):
         self.tree.delete(*self.tree.get_children())
         
-        productos = PRODUCTOS_MODEL.obtener_todos()
+        productos = self.controller.producto_service.get_all_products()
         
         search_terms = {col: var.get().lower() for col, var in self.search_vars.items()}
         
@@ -60,37 +60,63 @@ class ProductosView(ttk.Frame):
             all(search_terms[col] in str(getattr(p, col.lower())).lower() for col in self.search_vars)
         ]
 
-        for p in productos_filtrados: self.tree.insert("", "end", values=(p.codigo, p.descripcion, f"{p.precio:.2f}"))
+        for p in productos_filtrados: 
+            self.tree.insert("", "end", values=(p.codigo, p.descripcion, f"{p.precio:.2f}"))
         self._on_tree_select()
-    def open_form_producto(self, producto=None): FormProducto(self, producto)
+
+    def open_form_producto(self, producto=None): 
+        FormProducto(self, self.controller, producto)
+
     def editar_producto(self):
-        if i := self.tree.selection():
-            p = next((p for p in PRODUCTOS_MODEL.obtener_todos() if p.codigo == self.tree.item(i[0], "values")[0]), None)
-            if p: self.open_form_producto(p)
+        if not self.tree.selection():
+            return
+        selected_item = self.tree.selection()[0]
+        codigo_producto = self.tree.item(selected_item, "values")[0]
+        
+        producto = next((p for p in self.controller.producto_service.get_all_products() if p.codigo == codigo_producto), None)
+        
+        if producto: 
+            self.open_form_producto(producto)
+
     def eliminar_producto(self):
-        if i := self.tree.selection():
-            if messagebox.askyesno("Confirmar", "¿Eliminar producto seleccionado?", parent=self):
-                PRODUCTOS_MODEL.eliminar(self.tree.item(i[0], "values")[0]); self.actualizar_lista()
+        if not self.tree.selection():
+            return
+        selected_item = self.tree.selection()[0]
+        codigo_producto = self.tree.item(selected_item, "values")[0]
+
+        if messagebox.askyesno("Confirmar", f"¿Eliminar producto {codigo_producto}?"):
+            self.controller.producto_service.delete_product(codigo_producto)
+            self.actualizar_lista()
 
 class FormProducto(tk.Toplevel):
-    def __init__(self, parent, producto=None):
+    def __init__(self, parent, controller, producto=None):
         super().__init__(parent)
         self.transient(parent); self.grab_set()
         self.title("Formulario de Producto"); self.geometry("400x250")
-        self.parent = parent; self.producto_a_editar = producto
+        
+        self.parent = parent
+        self.controller = controller
+        self.producto_a_editar = producto
         
         self._build_widgets()
-        if producto: self.cargar_datos_producto()
+        if producto: 
+            self.cargar_datos_producto()
 
     def _build_widgets(self):
         form = ttk.Frame(self, padding="20"); form.pack(expand=True, fill="both")
         form.columnconfigure(1, weight=1)
         
-        self.codigo_var = tk.StringVar(); self.descripcion_var = tk.StringVar(); self.precio_var = tk.DoubleVar()
+        self.codigo_var = tk.StringVar()
+        self.descripcion_var = tk.StringVar()
+        self.precio_var = tk.DoubleVar()
+        
         self.codigo_entry = ttk.Entry(form, textvariable=self.codigo_var)
 
-        fields = {"Código:": self.codigo_entry, "Descripción:": ttk.Entry(form, textvariable=self.descripcion_var),
-                  "Precio:": ttk.Entry(form, textvariable=self.precio_var)}
+        fields = {
+            "Código:": self.codigo_entry, 
+            "Descripción:": ttk.Entry(form, textvariable=self.descripcion_var),
+            "Precio:": ttk.Entry(form, textvariable=self.precio_var)
+        }
         for i, (text, widget) in enumerate(fields.items()):
             ttk.Label(form, text=text).grid(row=i, column=0, sticky="w", pady=10, padx=5)
             widget.grid(row=i, column=1, sticky="ew", pady=10, padx=5)
@@ -99,21 +125,30 @@ class FormProducto(tk.Toplevel):
     
     def cargar_datos_producto(self):
         p = self.producto_a_editar
-        self.codigo_var.set(p.codigo); self.codigo_entry.config(state="disabled")
-        self.descripcion_var.set(p.descripcion); self.precio_var.set(p.precio)
+        self.codigo_var.set(p.codigo)
+        self.codigo_entry.config(state="disabled")
+        self.descripcion_var.set(p.descripcion)
+        self.precio_var.set(p.precio)
 
     def guardar_producto(self):
         try:
-            codigo, desc, precio = self.codigo_var.get().strip(), self.descripcion_var.get().strip(), self.precio_var.get()
-            if not codigo or not desc: raise ValueError("Código y Descripción son obligatorios.")
+            codigo = self.codigo_var.get().strip()
+            desc = self.descripcion_var.get().strip()
+            precio = self.precio_var.get()
+            if not codigo or not desc: 
+                raise ValueError("Código y Descripción son obligatorios.")
         except (tk.TclError, ValueError) as e:
             messagebox.showerror("Error de validación", str(e), parent=self)
             return
 
-        if self.producto_a_editar:
-            PRODUCTOS_MODEL.actualizar(codigo, desc, precio)
-        elif not PRODUCTOS_MODEL.agregar(Producto(codigo, desc, precio)):
-            messagebox.showerror("Error", "El código de producto ya existe.", parent=self)
-            return
+        try:
+            if self.producto_a_editar:
+                self.controller.producto_service.update_product(codigo, desc, precio)
+            else:
+                self.controller.producto_service.create_product(codigo, desc, precio)
             
-        self.parent.actualizar_lista(); self.destroy()
+            self.parent.actualizar_lista()
+            self.destroy()
+        except ValueError as e:
+            messagebox.showerror("Error", str(e), parent=self)
+            return

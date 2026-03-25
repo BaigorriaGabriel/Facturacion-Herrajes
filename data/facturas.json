@@ -1,37 +1,91 @@
 [
     {
-        "numero": 1,
-        "cliente_codigo": "C003",
-        "fecha": "2026-03-23",
-        "repartidor": "FRANCO",
+        "numero": 3,
+        "cliente_codigo": "C001",
+        "fecha": "2026-03-24",
+        "repartidor": "FABIAN",
         "items": [
             {
-                "producto_codigo": "P005",
-                "cantidad": 3,
-                "precio_unitario": 12.75
+                "producto_codigo": "12444",
+                "cantidad": 10,
+                "precio_unitario": 44.0
+            },
+            {
+                "producto_codigo": "P002",
+                "cantidad": 10,
+                "precio_unitario": 5.0
             },
             {
                 "producto_codigo": "P004",
-                "cantidad": 4,
-                "precio_unitario": 8.0
+                "cantidad": 12,
+                "precio_unitario": 555.0
             }
         ]
     },
     {
-        "numero": 2,
-        "cliente_codigo": "C003",
-        "fecha": "2026-03-24",
-        "repartidor": "AGUSTIN",
+        "numero": 4,
+        "cliente_codigo": "Mar902",
+        "fecha": "2026-03-25",
+        "repartidor": "FRANCO",
         "items": [
             {
-                "producto_codigo": "P006",
-                "cantidad": 5,
-                "precio_unitario": 7.5
+                "producto_codigo": "Rue80x27",
+                "cantidad": 12,
+                "precio_unitario": 12500.0
+            }
+        ]
+    },
+    {
+        "numero": 5,
+        "cliente_codigo": "fer",
+        "fecha": "2026-03-25",
+        "repartidor": "FABRICIO",
+        "items": [
+            {
+                "producto_codigo": "ppp",
+                "cantidad": 1,
+                "precio_unitario": 7090.0
             },
             {
-                "producto_codigo": "1233",
+                "producto_codigo": "P007",
+                "cantidad": 100,
+                "precio_unitario": 10.0
+            }
+        ]
+    },
+    {
+        "numero": 6,
+        "cliente_codigo": "C001",
+        "fecha": "2026-03-25",
+        "repartidor": "FRANCO",
+        "items": [
+            {
+                "producto_codigo": "P007",
+                "cantidad": 12,
+                "precio_unitario": 800000.0
+            },
+            {
+                "producto_codigo": "P002",
+                "cantidad": 12,
+                "precio_unitario": 5.0
+            },
+            {
+                "producto_codigo": "P003",
                 "cantidad": 5,
-                "precio_unitario": 123.0
+                "precio_unitario": 3.25
+            }
+        ]
+    },
+    {
+        "numero": 7,
+        "cliente_codigo": "Mar902",
+        "fecha": "2026-03-25",
+        "repartidor": "FRANCO",
+        "items": [
+            {
+                "producto_codigo": "P004",
+                "cantidad": 12,
+                "precio_unitario": 555.0
             }
         ]
     }

@@ -1,42 +1,46 @@
 import tkinter as tk
 from tkinter import ttk, font
-from views.main_menu import MainMenu
-from views.clientes_view import ClientesView
-from views.productos_view import ProductosView
-from views.facturas_view import FacturasView
-from views.factura_form_view import FacturaFormView
 import json
 import os
 
+# 1. Import new architecture components
+from ui.main_menu import MainMenu
+from ui.clientes_view import ClientesView
+from ui.productos_view import ProductosView
+from ui.facturas_view import FacturasView
+from ui.factura_form_view import FacturaFormView
+
+from repositories.cliente_repository import ClienteRepository
+from repositories.producto_repository import ProductoRepository
+from repositories.factura_repository import FacturaRepository
+
+from services.cliente_service import ClienteService
+from services.producto_service import ProductoService
+from services.factura_service import FacturaService
+
 def setup_temporary_data():
-    """Crea archivos de datos temporales si no existen."""
+    """Crea archivos de datos temporales si no existen para demostración."""
     if not os.path.exists("data"):
         os.makedirs("data")
 
-    clientes_path = "data/clientes.json"
-    if not os.path.exists(clientes_path):
+    if not os.path.exists("data/facturas.json"):
+        with open("data/facturas.json", "w") as f:
+            json.dump([], f)
+
+    if not os.path.exists("data/clientes.json"):
         clientes = [
             {"codigo": "C001", "nombre": "Consumidor Final", "adicional": "", "descuento": 0, "saldo": 0.0},
             {"codigo": "C002", "nombre": "Juan Perez", "adicional": "RUC: 12345678-9", "descuento": 5, "saldo": 0.0},
-            {"codigo": "C003", "nombre": "Constructora ABC", "adicional": "Tel: 021-555-444", "descuento": 10, "saldo": 0.0},
-            {"codigo": "C004", "nombre": "Maria Gonzalez", "adicional": "Dir: Av. Siempre Viva 123", "descuento": 0, "saldo": 0.0}
         ]
-        with open(clientes_path, "w") as f:
+        with open("data/clientes.json", "w") as f:
             json.dump(clientes, f, indent=4)
 
-    productos_path = "data/productos.json"
-    if not os.path.exists(productos_path):
+    if not os.path.exists("data/productos.json"):
         productos = [
-            {"codigo": "P001", "descripcion": "Martillo de Carpintero", "precio": 15.50},
-            {"codigo": "P002", "descripcion": "Destornillador Phillips #2", "precio": 5.00},
-            {"codigo": "P003", "descripcion": "Caja de 100 Clavos de 2 pulgadas", "precio": 3.25},
-            {"codigo": "P004", "descripcion": "Cinta Metrica 5m", "precio": 8.00},
-            {"codigo": "P005", "descripcion": "Pinza de Electricista", "precio": 12.75},
-            {"codigo": "P006", "descripcion": "Bolsa de Cemento 25kg", "precio": 7.50},
-            {"codigo": "P007", "descripcion": "Lata de Pintura Blanca 1L", "precio": 10.00},
-            {"codigo": "P008", "descripcion": "Tubo PVC 1/2 pulgada x 3m", "precio": 2.50}
+            {"codigo": "P001", "descripcion": "Martillo", "precio": 15.50},
+            {"codigo": "P002", "descripcion": "Destornillador", "precio": 5.00},
         ]
-        with open(productos_path, "w") as f:
+        with open("data/productos.json", "w") as f:
             json.dump(productos, f, indent=4)
 
 class App(tk.Tk):
@@ -45,7 +49,27 @@ class App(tk.Tk):
         self.title("Sistema de Facturación")
         self.geometry("1024x768")
 
-        # Estilo
+        self._setup_styles()
+        
+        # 2. Instantiate all layers
+        self._initialize_services()
+
+        # 3. Create main container and frames
+        container = self._create_main_container()
+        self.frames = {}
+        
+        # 4. Pass services to the UI frames
+        # The controller (self) now holds the services
+        views = (MainMenu, ClientesView, ProductosView, FacturasView, FacturaFormView)
+        for F in views:
+            page_name = F.__name__
+            frame = F(parent=container, controller=self)
+            self.frames[page_name] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame("MainMenu")
+        
+    def _setup_styles(self):
         self.style = ttk.Style(self)
         self.style.theme_use("clam")
         default_font = font.nametofont("TkDefaultFont")
@@ -61,21 +85,24 @@ class App(tk.Tk):
         self.style.map("Danger.TButton", background=[("active", "#c0392b")])
         self.style.configure("Accent.TButton", foreground="white", background="#27ae60")
         self.style.map("Accent.TButton", background=[("active", "#229954")])
+        
+    def _initialize_services(self):
+        # Repositories
+        cliente_repo = ClienteRepository()
+        producto_repo = ProductoRepository()
+        factura_repo = FacturaRepository(cliente_repo, producto_repo)
+        
+        # Services - store them on the controller
+        self.cliente_service = ClienteService(cliente_repo)
+        self.producto_service = ProductoService(producto_repo)
+        self.factura_service = FacturaService(factura_repo, self.cliente_service)
 
-        # Contenedor principal
+    def _create_main_container(self):
         container = ttk.Frame(self)
         container.pack(fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
-        self.frames = {}
-        for F in (MainMenu, ClientesView, ProductosView, FacturasView, FacturaFormView):
-            page_name = F.__name__
-            frame = F(parent=container, controller=self)
-            self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
-
-        self.show_frame("MainMenu")
+        return container
 
     def show_frame(self, page_name, context=None):
         frame = self.frames[page_name]

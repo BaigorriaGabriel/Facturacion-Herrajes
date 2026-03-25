@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from models import FACTURAS_MODEL
+# No longer need to import the global model
+# from models import FACTURAS_MODEL
 
 class FacturasView(ttk.Frame):
     def __init__(self, parent, controller):
@@ -50,31 +51,49 @@ class FacturasView(ttk.Frame):
     def actualizar_lista(self):
         self.tree.delete(*self.tree.get_children())
         
-        facturas = FACTURAS_MODEL.obtener_todas()
+        # Use the service to get data
+        facturas = self.controller.factura_service.get_all_invoices()
         
         search_terms = {col: var.get().lower() for col, var in self.search_vars.items()}
         
         facturas_filtradas = []
         for f in facturas:
-            if all(
-                (term in str(getattr(f, col.lower(), "")).lower() if col not in ["Cliente", "Fecha", "Total"] 
-                 else term in f.cliente.nombre.lower() if col == "Cliente" 
-                 else term in f.fecha.strftime('%d-%m-%Y') if col == "Fecha"
-                 else term in str(f.total) if col == "Total"
-                 else True) 
-                for col, term in search_terms.items()
-            ):
+            cliente_nombre = f.cliente.nombre.lower() if f.cliente else ""
+            
+            # The 'all' function requires an iterable. This generator expression creates one.
+            if all((
+                search_terms["Numero"] in str(f.numero),
+                search_terms["Fecha"] in f.fecha.strftime('%d-%m-%Y'),
+                search_terms["Cliente"] in cliente_nombre,
+                search_terms["Repartidor"] in f.repartidor.lower(),
+                search_terms["Total"] in f"{f.total:.2f}"
+            )):
                 facturas_filtradas.append(f)
 
         for f in facturas_filtradas:
-            self.tree.insert("", "end", values=(f.numero, f.fecha.strftime('%d-%m-%Y'), f.cliente.nombre, f.repartidor, f"{f.total:.2f}"))
+            cliente_nombre = f.cliente.nombre if f.cliente else "N/A"
+            self.tree.insert("", "end", values=(f.numero, f.fecha.strftime('%d-%m-%Y'), cliente_nombre, f.repartidor, f"{f.total:.2f}"))
+        
         self._on_tree_select()
+
     def editar_factura(self):
-        if i := self.tree.selection():
-            num = self.tree.item(i[0], "values")[0]
-            factura = FACTURAS_MODEL.obtener_por_numero(int(num))
-            if factura: self.controller.show_frame("FacturaFormView", context=factura)
+        if not self.tree.selection():
+            return
+        selected_item = self.tree.selection()[0]
+        num_factura = self.tree.item(selected_item, "values")[0]
+        
+        # Use the service to get the invoice
+        factura = self.controller.factura_service.get_invoice_by_number(int(num_factura))
+        
+        if factura: 
+            self.controller.show_frame("FacturaFormView", context=factura)
+
     def eliminar_factura(self):
-        if i := self.tree.selection():
-            if messagebox.askyesno("Confirmar", "¿Eliminar factura seleccionada? Esta acción modificará el saldo del cliente.", parent=self):
-                FACTURAS_MODEL.eliminar(int(self.tree.item(i[0], "values")[0])); self.actualizar_lista()
+        if not self.tree.selection():
+            return
+        selected_item = self.tree.selection()[0]
+        num_factura = self.tree.item(selected_item, "values")[0]
+
+        if messagebox.askyesno("Confirmar", f"¿Eliminar factura N°{num_factura}? Esta acción modificará el saldo del cliente."):
+            self.controller.factura_service.delete_invoice(int(num_factura))
+            self.actualizar_lista()

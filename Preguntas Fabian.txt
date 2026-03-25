@@ -15,3 +15,5 @@ Hay casos en los que por mas que el cliente tenga Descuento, no se le aplique en
 que le ponen NO al campo del descuento para que en esa factura no se le aplique el descuento?
 
 Imprime la factura para que Santi arme el pedido en base a eso y despues le llega esa factura al cliente? o Cumple ademas otro rol la factura?
+
+como hacen con el tema de los aumentos? aumentan todos los productos de una o 1x1? o como?
