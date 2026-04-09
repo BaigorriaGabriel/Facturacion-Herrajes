@@ -20,6 +20,7 @@ Imprime la factura para que Santi arme el pedido en base a eso y despues le lleg
 como hacen con el tema de los aumentos? aumentan todos los productos de una o 1x1? o como?
 
 
+
 QUEDA POR HACER:
 
 El tema de los aumentos, vi que talvez podriamos agregar un Tipo de producto a Productos y una

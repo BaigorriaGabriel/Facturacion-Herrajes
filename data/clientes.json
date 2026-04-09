@@ -47,5 +47,19 @@
         "adicional": "Sodimac - Shopping TOM",
         "descuento": 15.0,
         "saldo": 1167.125
+    },
+    {
+        "codigo": "VIT",
+        "nombre": "Vital",
+        "adicional": "Panamericana km45",
+        "descuento": 12.0,
+        "saldo": 10009.8
+    },
+    {
+        "codigo": "largo",
+        "nombre": "largo largo largo largo largo largo largo o largo largo largo largo largo",
+        "adicional": "asd",
+        "descuento": 32.0,
+        "saldo": 50603.6
     }
 ]

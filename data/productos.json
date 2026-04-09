@@ -33,5 +33,10 @@
         "codigo": "P008",
         "descripcion": "Tubo PVC 1/2 pul",
         "precio": 32.0
+    },
+    {
+        "codigo": "P009",
+        "descripcion": "Tornillo 36x8",
+        "precio": 200.0
     }
 ]

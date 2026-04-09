@@ -26,11 +26,6 @@
         "dia_reparto": "Viernes",
         "items": [
             {
-                "producto_codigo": "Rue80x27",
-                "cantidad": 12,
-                "precio_unitario": 12500.0
-            },
-            {
                 "producto_codigo": "P004",
                 "cantidad": 152,
                 "precio_unitario": 555.0
@@ -81,11 +76,6 @@
                 "producto_codigo": "P003",
                 "cantidad": 139,
                 "precio_unitario": 3.25
-            },
-            {
-                "producto_codigo": "12444",
-                "cantidad": 14,
-                "precio_unitario": 44.0
             }
         ]
     },
@@ -123,6 +113,39 @@
             {
                 "producto_codigo": "P004",
                 "cantidad": 1,
+                "precio_unitario": 555.0
+            }
+        ]
+    },
+    {
+        "numero": 11,
+        "cliente_codigo": "VIT",
+        "fecha": "2026-03-25",
+        "repartidor": "FRANCO",
+        "dia_reparto": "Jueves",
+        "items": [
+            {
+                "producto_codigo": "P009",
+                "cantidad": 4,
+                "precio_unitario": 150.0
+            },
+            {
+                "producto_codigo": "P001",
+                "cantidad": 45,
+                "precio_unitario": 15.5
+            }
+        ]
+    },
+    {
+        "numero": 12,
+        "cliente_codigo": "largo",
+        "fecha": "2026-03-25",
+        "repartidor": "FRANCO",
+        "dia_reparto": "S\u00e1bado",
+        "items": [
+            {
+                "producto_codigo": "P004",
+                "cantidad": 134,
                 "precio_unitario": 555.0
             }
         ]
