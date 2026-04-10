@@ -24,7 +24,8 @@ class ClienteRepository:
         return self.clientes
 
     def get_by_code(self, codigo):
-        return next((c for c in self.clientes if c.codigo == codigo), None)
+        codigo_normalizado = codigo.upper()
+        return next((c for c in self.clientes if c.codigo == codigo_normalizado), None)
 
     def add(self, cliente):
         if self.get_by_code(cliente.codigo):
@@ -35,7 +36,8 @@ class ClienteRepository:
         return True
 
     def update(self, codigo, nombre, adicional, descuento, saldo):
-        cliente = self.get_by_code(codigo)
+        codigo_normalizado = codigo.upper()
+        cliente = self.get_by_code(codigo_normalizado)
         if cliente:
             cliente.nombre = nombre
             cliente.adicional = adicional
@@ -46,7 +48,8 @@ class ClienteRepository:
         return False
 
     def delete(self, codigo):
-        cliente = self.get_by_code(codigo)
+        codigo_normalizado = codigo.upper()
+        cliente = self.get_by_code(codigo_normalizado)
         if cliente:
             self.clientes.remove(cliente)
             self._save()

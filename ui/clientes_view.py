@@ -99,7 +99,7 @@ class ClientesView(ttk.Frame):
         if not self.tree.selection():
             return
         selected_item = self.tree.selection()[0]
-        codigo_cliente = self.tree.item(selected_item, "values")[0]
+        codigo_cliente = self.tree.item(selected_item, "values")[0].upper()
         
         # Find the client object using the service
         cliente = next((c for c in self.controller.cliente_service.get_all_clients() if c.codigo == codigo_cliente), None)
@@ -111,7 +111,7 @@ class ClientesView(ttk.Frame):
         if not self.tree.selection():
             return
         selected_item = self.tree.selection()[0]
-        codigo_cliente = self.tree.item(selected_item, "values")[0]
+        codigo_cliente = self.tree.item(selected_item, "values")[0].upper()
 
         if messagebox.askyesno("Confirmar", f"¿Eliminar cliente {codigo_cliente}?"):
             self.controller.cliente_service.delete_client(codigo_cliente)
@@ -173,7 +173,7 @@ class FormCliente(tk.Toplevel):
     def guardar_cliente(self):
         try:
             # Read all variables from the form first
-            codigo = self.codigo_var.get().strip()
+            codigo = self.codigo_var.get().strip().upper()
             nombre = self.nombre_var.get().strip()
             adicional = self.adicional_var.get().strip()
             descuento = self.descuento_var.get()

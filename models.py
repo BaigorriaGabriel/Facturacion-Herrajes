@@ -3,7 +3,7 @@ import datetime
 
 class Cliente:
     def __init__(self, codigo, nombre, adicional, descuento, saldo=0.0):
-        self.codigo = codigo
+        self.codigo = codigo.upper()
         self.nombre = nombre
         self.adicional = adicional
         self.descuento = descuento
@@ -18,7 +18,7 @@ class Cliente:
 
 class Producto:
     def __init__(self, codigo, descripcion, precio):
-        self.codigo = codigo
+        self.codigo = codigo.upper()
         self.descripcion = descripcion
         self.precio = precio
     

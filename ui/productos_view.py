@@ -95,7 +95,7 @@ class ProductosView(ttk.Frame):
         if not self.tree.selection():
             return
         selected_item = self.tree.selection()[0]
-        codigo_producto = self.tree.item(selected_item, "values")[0]
+        codigo_producto = self.tree.item(selected_item, "values")[0].upper()
         
         producto = next((p for p in self.controller.producto_service.get_all_products() if p.codigo == codigo_producto), None)
         
@@ -106,7 +106,7 @@ class ProductosView(ttk.Frame):
         if not self.tree.selection():
             return
         selected_item = self.tree.selection()[0]
-        codigo_producto = self.tree.item(selected_item, "values")[0]
+        codigo_producto = self.tree.item(selected_item, "values")[0].upper()
 
         if messagebox.askyesno("Confirmar", f"¿Eliminar producto {codigo_producto}?"):
             self.controller.producto_service.delete_product(codigo_producto)
@@ -156,7 +156,7 @@ class FormProducto(tk.Toplevel):
 
     def guardar_producto(self):
         try:
-            codigo = self.codigo_var.get().strip()
+            codigo = self.codigo_var.get().strip().upper()
             desc = self.descripcion_var.get().strip()
             precio = self.precio_var.get()
             if not codigo or not desc: 

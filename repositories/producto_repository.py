@@ -23,7 +23,8 @@ class ProductoRepository:
         return self.productos
 
     def get_by_code(self, codigo):
-        return next((p for p in self.productos if p.codigo == codigo), None)
+        codigo_normalizado = codigo.upper()
+        return next((p for p in self.productos if p.codigo == codigo_normalizado), None)
 
     def add(self, producto):
         if self.get_by_code(producto.codigo):
@@ -33,7 +34,8 @@ class ProductoRepository:
         return True
 
     def update(self, codigo, descripcion, precio):
-        producto = self.get_by_code(codigo)
+        codigo_normalizado = codigo.upper()
+        producto = self.get_by_code(codigo_normalizado)
         if producto:
             producto.descripcion = descripcion
             producto.precio = precio
@@ -42,7 +44,8 @@ class ProductoRepository:
         return False
 
     def delete(self, codigo):
-        producto = self.get_by_code(codigo)
+        codigo_normalizado = codigo.upper()
+        producto = self.get_by_code(codigo_normalizado)
         if producto:
             self.productos.remove(producto)
             self._save()

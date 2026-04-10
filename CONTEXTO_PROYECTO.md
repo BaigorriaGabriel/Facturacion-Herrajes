@@ -478,6 +478,54 @@ class Factura:
 
 Este registro mantiene un histórico de cambios significativos para referencia futura.
 
+### 2026-04-09 - Case-insensitive completo para códigos (Normalización total)
+
+**Cambios:**
+- ✅ Modelos (Cliente, Producto): Códigos normalizados a mayúsculas en `__init__`
+- ✅ Repositorios: Búsquedas normalizadas (`get_by_code`, `update`, `delete`)
+- ✅ UI (ClientesView, ProductosView): Normalización en búsquedas y eliminaciones
+- ✅ UI (FacturaFormView): Normalización al seleccionar clientes y productos
+- **Resultado:** `C002`, `c002`, `C002` → error "ya existe"
+
+**Archivos modificados:** 
+- `models.py` (Cliente, Producto)
+- `repositories/cliente_repository.py` 
+- `repositories/producto_repository.py`
+- `ui/clientes_view.py`
+- `ui/productos_view.py`
+- `ui/factura_form_view.py`
+
+**Estado:** Sistema completamente funcional en memoria
+
+---
+
+### 2026-04-09 - Códigos case-insensitive (normalizados a mayúsculas)
+
+**Cambios:**
+- ✅ Códigos de clientes siempre en mayúsculas (C002 = c002)
+- ✅ Códigos de productos siempre en mayúsculas (P001 = p001)
+- **Razón:** Evita duplicados accidentales por diferencia de mayúsculas/minúsculas
+
+**Archivos modificados:** `models.py` - métodos `__init__` de Cliente y Producto
+
+**Implementación:** Normalizado en `codigo.upper()` al crear/editar
+
+**Estado:** Sistema completamente funcional en memoria
+
+---
+
+### 2026-04-09 - Reset de cantidad después de agregar producto
+
+**Cambios:**
+- ✅ Campo "cantidad" se resetea a 1 después de agregar un producto a factura
+- **Razón:** Evita errores donde el usuario agrega un producto con la cantidad del anterior
+
+**Archivo modificado:** `ui/factura_form_view.py` - método `agregar_item()`
+
+**Estado:** Sistema completamente funcional en memoria
+
+---
+
 ### 2026-04-09 - Versión Inicial Documentada
 
 **Cambios:**

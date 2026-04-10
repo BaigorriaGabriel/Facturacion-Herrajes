@@ -11,7 +11,7 @@
         "nombre": "Juan Perez",
         "adicional": "RUC: 12345678-9",
         "descuento": 5,
-        "saldo": 1071.3625
+        "saldo": 17221.3625
     },
     {
         "codigo": "C004",
@@ -56,10 +56,10 @@
         "saldo": 10009.8
     },
     {
-        "codigo": "largo",
-        "nombre": "largo largo largo largo largo largo largo o largo largo largo largo largo",
-        "adicional": "asd",
-        "descuento": 32.0,
-        "saldo": 50603.6
+        "codigo": "C012",
+        "nombre": "Alfredo",
+        "adicional": "Av Esquina 812",
+        "descuento": 12.0,
+        "saldo": 1500.0
     }
 ]

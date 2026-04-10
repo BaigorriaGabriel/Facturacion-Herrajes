@@ -132,7 +132,7 @@ class FacturaFormView(ttk.Frame):
         if not self.cliente_listbox.curselection(): return
         
         selected_str = self.cliente_listbox.get(self.cliente_listbox.curselection()[0])
-        codigo = selected_str.split(" - ")[0]
+        codigo = selected_str.split(" - ")[0].upper()
         
         all_clients = self.controller.cliente_service.get_all_clients()
         cliente_seleccionado = next((c for c in all_clients if c.codigo == codigo), None)
@@ -165,7 +165,7 @@ class FacturaFormView(ttk.Frame):
         if not self.producto_listbox.curselection(): return
 
         selected_str = self.producto_listbox.get(self.producto_listbox.curselection()[0])
-        codigo = selected_str.split(" - ")[0]
+        codigo = selected_str.split(" - ")[0].upper()
         
         all_products = self.controller.producto_service.get_all_products()
         self.selected_product = next((p for p in all_products if p.codigo == codigo), None)
@@ -194,6 +194,7 @@ class FacturaFormView(ttk.Frame):
             self.actualizar_lista_items()
             self.actualizar_totales()
             self.selected_product = None; self.producto_search_var.set(""); self.lbl_precio_unitario.config(text="Precio: -")
+            self.cantidad_var.set(1)
         except tk.TclError:
             messagebox.showwarning("Cantidad inválida", "La cantidad debe ser un número entero.", parent=self)
     
