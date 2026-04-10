@@ -38,10 +38,5 @@
         "codigo": "P009",
         "descripcion": "Tornillo 36x8",
         "precio": 200.0
-    },
-    {
-        "codigo": "P016",
-        "descripcion": "Lata",
-        "precio": 45.0
     }
 ]
