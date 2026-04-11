@@ -13,7 +13,7 @@
         "adicional": "RUC: 12345678-9",
         "descuento_1": true,
         "descuento_2": true,
-        "saldo": 8138.800000000001
+        "saldo": 7306.800000000001
     },
     {
         "codigo": "C003",
@@ -21,7 +21,7 @@
         "adicional": "Av. Cordoba 2383",
         "descuento_1": true,
         "descuento_2": true,
-        "saldo": -100.0
+        "saldo": -666.0
     },
     {
         "codigo": "C004",

@@ -54,5 +54,26 @@
         "monto": 1000.0,
         "fecha": "2026-04-10",
         "comentario": "pago ayer los tubos"
+    },
+    {
+        "id": 9,
+        "cliente_codigo": "C002",
+        "monto": 132.0,
+        "fecha": "2026-04-11",
+        "comentario": "pago las bisagras"
+    },
+    {
+        "id": 11,
+        "cliente_codigo": "C002",
+        "monto": 700.0,
+        "fecha": "2026-04-07",
+        "comentario": "pago atrasado"
+    },
+    {
+        "id": 12,
+        "cliente_codigo": "C003",
+        "monto": 566.0,
+        "fecha": "2026-04-11",
+        "comentario": "asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdsdsdsdsdsdererrererererererererere"
     }
 ]
