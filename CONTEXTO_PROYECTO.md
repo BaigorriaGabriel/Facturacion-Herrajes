@@ -1,7 +1,7 @@
 # CONTEXTO_PROYECTO.md - Sistema de Facturación
 
-**Versión:** 1.0  
-**Última actualización:** 9 de abril de 2026  
+**Versión:** 1.1  
+**Última actualización:** 10 de abril de 2026  
 **Estado:** Activo y en desarrollo
 
 ---
@@ -72,7 +72,8 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - `codigo` (único, clave primaria)
 - `nombre` (nombre del cliente)
 - `adicional` (dirección, CUIT, RUC, etc.)
-- `descuento` (porcentaje, ej: 5%)
+- `descuento_1` (bool: primer descuento del 8%)
+- `descuento_2` (bool: segundo descuento del 8%)
 - `saldo` (monto pendiente de pago)
 
 **Operaciones:**
@@ -82,8 +83,11 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - ✅ Listar clientes con buscador/filtro
 
 **Notas importantes:**
-- El descuento se aplica automáticamente a todas las facturas de ese cliente
-- El saldo se actualiza cuando se crean/modifican/eliminan facturas
+- Los descuentos funcionan como bloques de 8% acumulativos (compuestos)
+- 0 descuentos activos = sin descuento
+- 1 descuento activo = 8% de descuento
+- 2 descuentos activos = 8% × 8% = 7.68% de descuento efectivo (NO 16%)
+- Los descuentos se aplican automáticamente a todas las facturas de ese cliente
 
 ### 5.2 Gestión de Productos
 
@@ -125,8 +129,11 @@ Desarrollar una herramienta de facturación simple y funcional que:
 
 **Cálculos automáticos:**
 - `subtotal_general` = suma de todos los subtotales
-- `descuento` = subtotal_general × (descuento_cliente / 100)
-- `total_final` = subtotal_general - descuento
+- `descuentos_aplicados` = según la configuración del cliente:
+  - Si descuento_1 y descuento_2: total × 0.92 × 0.92 (descuento compuesto)
+  - Si solo descuento_1: total × 0.92
+  - Si ninguno: sin descuento
+- `total_final` = subtotal_general con descuentos compuestos aplicados
 
 **Operaciones:**
 - ✅ Crear factura
@@ -152,9 +159,14 @@ class Cliente:
     - codigo: str (único)
     - nombre: str
     - adicional: str (dirección, CUIT, etc.)
-    - descuento: int (porcentaje)
+    - descuento_1: bool (primer bloque de 8%)
+    - descuento_2: bool (segundo bloque de 8%)
     - saldo: float (default: 0.0)
 ```
+**Lógica de descuentos:**
+- 0 activos: sin descuento (0%)
+- 1 activo: 8% de descuento
+- 2 activos: 7.68% de descuento efectivo (multiplica 0.92 × 0.92)
 
 ### Producto
 ```python
@@ -477,6 +489,36 @@ class Factura:
 ## 13. Cambios Recientes
 
 Este registro mantiene un histórico de cambios significativos para referencia futura.
+
+### 2026-04-10 - Cambio en sistema de descuentos: bloques de 8% compuestos
+
+**Cambios:**
+- ✅ Reemplazado sistema de descuento numérico por bloques de 8% acumulativos (compuestos)
+- ✅ Cliente ahora tiene `descuento_1` y `descuento_2` (booleanos) en lugar de `descuento` (porcentaje)
+- ✅ Lógica de cálculo: 
+  - 0 descuentos: sin descuento
+  - 1 descuento: 8% 
+  - 2 descuentos: 8% × 8% = 7.68% efectivo (compuesto, NO acumulado)
+- ✅ UI de clientes: checkboxes "8% (1)" y "8% (2)" en lugar de campo numérico
+- ✅ Tabla de clientes: columna "Descuentos" muestra "Sin descuento", "8%", o "8% + 8%"
+- ✅ Factura: muestra descuentos aplicados con detalle (ej: "Descuentos: $XX.XX (8% + 8%)")
+
+**Archivos modificados:**
+- `models.py` (Cliente: descuento numérico → descuento_1, descuento_2 bool; Factura: nueva lógica de cálculo)
+- `services/cliente_service.py` (parámetros create_client y update_client)
+- `repositories/cliente_repository.py` (método update)
+- `ui/clientes_view.py` (FormCliente con checkboxes, tabla actualizada)
+- `ui/factura_form_view.py` (mostrar descuentos con nueva lógica)
+- `CONTEXTO_PROYECTO.md` (documentación de cambios)
+
+**Estado:** Sistema completamente funcional con nueva lógica de descuentos
+
+**Notas técnicas:**
+- `Factura.calcular_totales()`: ahora multiplica por 0.92 secuencialmente
+- `Factura.obtener_descripcion_descuentos()`: retorna string descriptivo
+- `Factura.obtener_descuento_valor()`: retorna monto total de descuento aplicado
+
+---
 
 ### 2026-04-09 - Case-insensitive completo para códigos (Normalización total)
 

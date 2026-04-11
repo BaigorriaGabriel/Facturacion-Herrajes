@@ -1,51 +1,34 @@
 [
     {
+        "codigo": "C001",
+        "nombre": "Consumidor Final",
+        "adicional": "",
+        "descuento_1": false,
+        "descuento_2": false,
+        "saldo": 45.5
+    },
+    {
         "codigo": "C002",
         "nombre": "Juan Perez",
         "adicional": "RUC: 12345678-9",
-        "descuento": 5,
-        "saldo": 17221.3625
+        "descuento_1": true,
+        "descuento_2": true,
+        "saldo": 5790.0
     },
     {
-        "codigo": "C004",
-        "nombre": "Maria Gonzalez",
-        "adicional": "Dir: Av. Siempre Viva 123",
-        "descuento": 0,
+        "codigo": "C003",
+        "nombre": "Hector",
+        "adicional": "Av. Cordoba 2383",
+        "descuento_1": true,
+        "descuento_2": true,
         "saldo": 0.0
     },
     {
-        "codigo": "MAR902",
-        "nombre": "Marcos Pereyra",
-        "adicional": "Chile 902",
-        "descuento": 25.0,
-        "saldo": 7113.125
-    },
-    {
-        "codigo": "RUB700",
-        "nombre": "Ruben",
-        "adicional": "Alvear 700",
-        "descuento": 10.0,
-        "saldo": 695.25
-    },
-    {
-        "codigo": "SOD",
-        "nombre": "SODIMAC",
-        "adicional": "Sodimac - Shopping TOM",
-        "descuento": 15.35,
-        "saldo": 1167.125
-    },
-    {
-        "codigo": "VIT",
-        "nombre": "Vital",
-        "adicional": "Panamericana km45",
-        "descuento": 12.0,
-        "saldo": 10009.8
-    },
-    {
-        "codigo": "C012",
-        "nombre": "Alfredo",
-        "adicional": "Av Esquina 812",
-        "descuento": 12.0,
-        "saldo": 1500.0
+        "codigo": "C004",
+        "nombre": "Carlos",
+        "adicional": "Libre",
+        "descuento_1": true,
+        "descuento_2": true,
+        "saldo": 920.0640000000001
     }
 ]

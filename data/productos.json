@@ -35,8 +35,13 @@
         "precio": 32.0
     },
     {
+        "codigo": "P010",
+        "descripcion": "Picaporte 72x8",
+        "precio": 20.0
+    },
+    {
         "codigo": "P009",
-        "descripcion": "Tornillo 36x8",
-        "precio": 200.0
+        "descripcion": "Termo Stanley",
+        "precio": 150.0
     }
 ]

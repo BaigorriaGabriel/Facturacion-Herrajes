@@ -140,7 +140,13 @@ class FacturaFormView(ttk.Frame):
         if cliente_seleccionado:
             self.factura_actual.cliente = cliente_seleccionado
             self.cliente_search_var.set(f"{cliente_seleccionado.codigo} - {cliente_seleccionado.nombre}")
-            self.lbl_descuento.config(text=f"Descuento: {cliente_seleccionado.descuento}%")
+            # Mostrar descuentos en formato: "Sin descuento", "8%", o "8% + 8%"
+            desc_str = "Sin descuento"
+            if cliente_seleccionado.descuento_1 and cliente_seleccionado.descuento_2:
+                desc_str = "8% + 8%"
+            elif cliente_seleccionado.descuento_1 or cliente_seleccionado.descuento_2:
+                desc_str = "8%"
+            self.lbl_descuento.config(text=f"Descuentos: {desc_str}")
             self.lbl_saldo.config(text=f"Saldo Actual: ${cliente_seleccionado.saldo:.2f}")
             self.actualizar_totales()
             self.cliente_listbox.pack_forget()
@@ -215,9 +221,20 @@ class FacturaFormView(ttk.Frame):
     def actualizar_totales(self):
         self.factura_actual.calcular_totales()
         self.lbl_subtotal.config(text=f"Subtotal: ${self.factura_actual.subtotal_general:.2f}")
+        
         if self.factura_actual.cliente:
-            descuento_valor = self.factura_actual.subtotal_general * (self.factura_actual.cliente.descuento / 100)
-            self.lbl_total_descuento.config(text=f"Descuento: ${descuento_valor:.2f}")
+            # Obtener descripción de descuentos y monto
+            descuento_valor = self.factura_actual.obtener_descuento_valor()
+            desc_desc = self.factura_actual.obtener_descripcion_descuentos()
+            
+            # Mostrar detalle: ej: "Descuentos: $XX.XX (8% + 8%)"
+            if desc_desc == "Sin descuento":
+                self.lbl_total_descuento.config(text="Descuentos: $0.00")
+            else:
+                self.lbl_total_descuento.config(text=f"Descuentos: ${descuento_valor:.2f} ({desc_desc})")
+        else:
+            self.lbl_total_descuento.config(text="Descuentos: $0.00")
+        
         self.lbl_total.config(text=f"TOTAL: ${self.factura_actual.total:.2f}")
 
     def limpiar_formulario(self):
@@ -225,7 +242,7 @@ class FacturaFormView(ttk.Frame):
         self.cliente_search_var.set(""); self.producto_search_var.set(""); self.repartidor_var.set("")
         self.dia_reparto_var.set("")
         self.cliente_listbox.pack_forget(); self.producto_listbox.pack_forget()
-        self.lbl_descuento.config(text="Descuento: -"); self.lbl_saldo.config(text="Saldo Actual: -")
+        self.lbl_descuento.config(text="Descuentos: -"); self.lbl_saldo.config(text="Saldo Actual: -")
         self.lbl_precio_unitario.config(text="Precio: -"); self.cantidad_var.set(1)
         self.items_tree.delete(*self.items_tree.get_children())
         self.lbl_subtotal.config(text="Subtotal: $0.00"); self.lbl_total_descuento.config(text="Descuento: $0.00")
@@ -235,7 +252,13 @@ class FacturaFormView(ttk.Frame):
         if self.factura_actual.cliente:
             cliente = self.factura_actual.cliente
             self.cliente_search_var.set(f"{cliente.codigo} - {cliente.nombre}")
-            self.lbl_descuento.config(text=f"Descuento: {cliente.descuento}%")
+            # Mostrar descuentos en formato: "Sin descuento", "8%", o "8% + 8%"
+            desc_str = "Sin descuento"
+            if cliente.descuento_1 and cliente.descuento_2:
+                desc_str = "8% + 8%"
+            elif cliente.descuento_1 or cliente.descuento_2:
+                desc_str = "8%"
+            self.lbl_descuento.config(text=f"Descuentos: {desc_str}")
             self.lbl_saldo.config(text=f"Saldo Actual: ${cliente.saldo:.2f}")
             self.cliente_search.config(state="disabled")
 

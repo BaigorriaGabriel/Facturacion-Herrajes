@@ -9,19 +9,19 @@ class ClienteService:
     def get_all_clients(self):
         return self._repository.get_all()
 
-    def create_client(self, codigo, nombre, adicional, descuento, saldo=0.0):
+    def create_client(self, codigo, nombre, adicional, descuento_1, descuento_2, saldo=0.0):
         # Business logic could be added here, e.g., validation
         if self._repository.get_by_code(codigo):
             raise ValueError(f"Cliente con código {codigo} ya existe.")
         
         # Using the model class to create a new instance
-        nuevo_cliente = Cliente(codigo, nombre, adicional, descuento, saldo=saldo)
+        nuevo_cliente = Cliente(codigo, nombre, adicional, descuento_1, descuento_2, saldo=saldo)
         self._repository.add(nuevo_cliente)
         return nuevo_cliente
 
-    def update_client(self, codigo, nombre, adicional, descuento, saldo):
+    def update_client(self, codigo, nombre, adicional, descuento_1, descuento_2, saldo):
         # In a real scenario, you might not allow direct saldo updates from here
-        return self._repository.update(codigo, nombre, adicional, descuento, saldo)
+        return self._repository.update(codigo, nombre, adicional, descuento_1, descuento_2, saldo)
 
     def delete_client(self, codigo):
         # Add business logic, e.g., check if client has outstanding invoices
@@ -36,7 +36,8 @@ class ClienteService:
                 client.codigo, 
                 client.nombre, 
                 client.adicional, 
-                client.descuento, 
+                client.descuento_1,
+                client.descuento_2,
                 client.saldo
             )
         return False

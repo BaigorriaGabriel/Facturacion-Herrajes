@@ -2,11 +2,12 @@
 import datetime
 
 class Cliente:
-    def __init__(self, codigo, nombre, adicional, descuento, saldo=0.0):
+    def __init__(self, codigo, nombre, adicional, descuento_1=False, descuento_2=False, saldo=0.0):
         self.codigo = codigo.upper()
         self.nombre = nombre
         self.adicional = adicional
-        self.descuento = descuento
+        self.descuento_1 = descuento_1
+        self.descuento_2 = descuento_2
         self.saldo = saldo
 
     def to_dict(self):
@@ -84,10 +85,34 @@ class Factura:
     def calcular_totales(self):
         self.subtotal_general = sum(item.subtotal for item in self.items)
         if self.cliente:
-            descuento = self.subtotal_general * (self.cliente.descuento / 100)
-            self.total = self.subtotal_general - descuento
+            total_con_descuento = self.subtotal_general
+            # Aplicar descuentos compuestos del 8% cada uno
+            if self.cliente.descuento_1:
+                total_con_descuento *= 0.92
+            if self.cliente.descuento_2:
+                total_con_descuento *= 0.92
+            self.total = total_con_descuento
         else:
             self.total = self.subtotal_general
+    
+    def obtener_descripcion_descuentos(self):
+        """Retorna descripción de descuentos aplicados al cliente."""
+        if not self.cliente:
+            return "Sin descuento"
+        
+        count = int(self.cliente.descuento_1) + int(self.cliente.descuento_2)
+        if count == 0:
+            return "Sin descuento"
+        elif count == 1:
+            return "8%"
+        else:  # count == 2
+            return "8% + 8%"
+    
+    def obtener_descuento_valor(self):
+        """Retorna el monto total de descuento aplicado."""
+        if not self.cliente or (not self.cliente.descuento_1 and not self.cliente.descuento_2):
+            return 0.0
+        return self.subtotal_general - self.total
         
     def to_dict(self):
         return {

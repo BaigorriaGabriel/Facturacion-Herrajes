@@ -23,8 +23,8 @@ class ClientesView(ttk.Frame):
         search_frame.pack(fill="x", padx=10, pady=5)
 
         self.search_vars = {}
-        cols = ("Codigo", "Nombre", "Adicional", "Descuento", "Saldo")
-        col_widths = {"Codigo": 80, "Nombre": 150, "Adicional": 200, "Descuento": 100, "Saldo": 100}
+        cols = ("Codigo", "Nombre", "Adicional", "Descuentos", "Saldo")
+        col_widths = {"Codigo": 80, "Nombre": 150, "Adicional": 200, "Descuentos": 120, "Saldo": 100}
         
         # Configurar columnas con grid basado en anchos de tabla
         for idx, col in enumerate(cols):
@@ -52,7 +52,7 @@ class ClientesView(ttk.Frame):
         self.tree.column("Codigo", width=80, anchor="center")
         self.tree.column("Nombre", width=150, anchor="w")
         self.tree.column("Adicional", width=200, anchor="w")
-        self.tree.column("Descuento", width=100, anchor="center")
+        self.tree.column("Descuentos", width=120, anchor="center")
         self.tree.column("Saldo", width=100, anchor="e")
         # Agregar scrollbars como miembros de table_frame
         vsb = ttk.Scrollbar(table_frame, orient="vertical", command=self.tree.yview)
@@ -82,13 +82,35 @@ class ClientesView(ttk.Frame):
         
         search_terms = {col: var.get().lower() for col, var in self.search_vars.items()}
         
+        # Mapeo de columnas a atributos (para columnas especiales)
+        def get_valor_columna(cliente, col):
+            if col == "Descuentos":
+                # Retorna descripción de descuentos
+                if cliente.descuento_1 and cliente.descuento_2:
+                    return "8% + 8%"
+                elif cliente.descuento_1 or cliente.descuento_2:
+                    return "8%"
+                else:
+                    return "sin descuento"
+            else:
+                # Para otras columnas, usa el nombre en minúsculas
+                attr_name = col.lower() if col != "Adicional" else "adicional"
+                return str(getattr(cliente, attr_name, "")).lower()
+        
         clientes_filtrados = [
             c for c in clientes if
-            all(search_terms[col] in str(getattr(c, col.lower() if col != "Adicional" else "adicional")).lower() for col in self.search_vars)
+            all(search_terms[col] in get_valor_columna(c, col) for col in self.search_vars)
         ]
 
         for c in clientes_filtrados:
-            self.tree.insert("", "end", values=(c.codigo, c.nombre, c.adicional, c.descuento, f"{c.saldo:.2f}"))
+            # Descripción de descuentos: "Sin descuento", "8%", o "8% + 8%"
+            desc_descuentos = "Sin descuento"
+            if c.descuento_1 and c.descuento_2:
+                desc_descuentos = "8% + 8%"
+            elif c.descuento_1 or c.descuento_2:
+                desc_descuentos = "8%"
+            
+            self.tree.insert("", "end", values=(c.codigo, c.nombre, c.adicional, desc_descuentos, f"{c.saldo:.2f}"))
         self._on_tree_select()
 
     def open_form_cliente(self, cliente=None): 
@@ -141,25 +163,37 @@ class FormCliente(tk.Toplevel):
         self.codigo_var = tk.StringVar()
         self.nombre_var = tk.StringVar()
         self.adicional_var = tk.StringVar()
-        self.descuento_var = tk.DoubleVar()
+        self.descuento_1_var = tk.BooleanVar(value=False)
+        self.descuento_2_var = tk.BooleanVar(value=False)
         self.saldo_var = tk.DoubleVar()
         
         self.codigo_entry = ttk.Entry(form, textvariable=self.codigo_var)
         self.saldo_entry = ttk.Entry(form, textvariable=self.saldo_var)
 
-        fields = {
-            "Código:": self.codigo_entry,
-            "Nombre:": ttk.Entry(form, textvariable=self.nombre_var),
-            "Dato Adicional:": ttk.Entry(form, textvariable=self.adicional_var),
-            "Descuento (%):": ttk.Entry(form, textvariable=self.descuento_var),
-            "Saldo ($):": self.saldo_entry
-        }
+        # Fila 0: Código
+        ttk.Label(form, text="Código:").grid(row=0, column=0, sticky="w", pady=5, padx=5)
+        self.codigo_entry.grid(row=0, column=1, sticky="ew", pady=5, padx=5)
         
-        for i, (text, widget) in enumerate(fields.items()):
-            ttk.Label(form, text=text).grid(row=i, column=0, sticky="w", pady=5, padx=5)
-            widget.grid(row=i, column=1, sticky="ew", pady=5, padx=5)
+        # Fila 1: Nombre
+        ttk.Label(form, text="Nombre:").grid(row=1, column=0, sticky="w", pady=5, padx=5)
+        ttk.Entry(form, textvariable=self.nombre_var).grid(row=1, column=1, sticky="ew", pady=5, padx=5)
+        
+        # Fila 2: Dato Adicional
+        ttk.Label(form, text="Dato Adicional:").grid(row=2, column=0, sticky="w", pady=5, padx=5)
+        ttk.Entry(form, textvariable=self.adicional_var).grid(row=2, column=1, sticky="ew", pady=5, padx=5)
+        
+        # Fila 3-4: Descuentos (checkboxes)
+        ttk.Label(form, text="Descuentos:").grid(row=3, column=0, sticky="w", pady=5, padx=5)
+        descuentos_frame = ttk.Frame(form)
+        descuentos_frame.grid(row=3, column=1, sticky="ew", pady=5, padx=5)
+        ttk.Checkbutton(descuentos_frame, text="8% (1)", variable=self.descuento_1_var).pack(anchor="w")
+        ttk.Checkbutton(descuentos_frame, text="8% (2)", variable=self.descuento_2_var).pack(anchor="w")
+        
+        # Fila 5: Saldo
+        ttk.Label(form, text="Saldo ($):").grid(row=4, column=0, sticky="w", pady=5, padx=5)
+        self.saldo_entry.grid(row=4, column=1, sticky="ew", pady=5, padx=5)
 
-        ttk.Button(form, text="Guardar", command=self.guardar_cliente).grid(row=len(fields), column=0, columnspan=2, pady=20)
+        ttk.Button(form, text="Guardar", command=self.guardar_cliente).grid(row=5, column=0, columnspan=2, pady=20)
 
     def cargar_datos_cliente(self):
         c = self.cliente_a_editar
@@ -167,7 +201,8 @@ class FormCliente(tk.Toplevel):
         self.codigo_entry.config(state="disabled") # Don't allow editing the primary key
         self.nombre_var.set(c.nombre)
         self.adicional_var.set(c.adicional)
-        self.descuento_var.set(c.descuento)
+        self.descuento_1_var.set(c.descuento_1)
+        self.descuento_2_var.set(c.descuento_2)
         self.saldo_var.set(c.saldo)
 
     def guardar_cliente(self):
@@ -176,7 +211,8 @@ class FormCliente(tk.Toplevel):
             codigo = self.codigo_var.get().strip().upper()
             nombre = self.nombre_var.get().strip()
             adicional = self.adicional_var.get().strip()
-            descuento = self.descuento_var.get()
+            descuento_1 = self.descuento_1_var.get()
+            descuento_2 = self.descuento_2_var.get()
             saldo = self.saldo_var.get()
             
             if not codigo or not nombre:
@@ -188,9 +224,9 @@ class FormCliente(tk.Toplevel):
 
         try:
             if self.cliente_a_editar:
-                self.controller.cliente_service.update_client(codigo, nombre, adicional, descuento, saldo)
+                self.controller.cliente_service.update_client(codigo, nombre, adicional, descuento_1, descuento_2, saldo)
             else:
-                self.controller.cliente_service.create_client(codigo, nombre, adicional, descuento, saldo)
+                self.controller.cliente_service.create_client(codigo, nombre, adicional, descuento_1, descuento_2, saldo)
             
             self.parent.actualizar_lista()
             self.destroy()

@@ -35,13 +35,14 @@ class ClienteRepository:
         self._save()
         return True
 
-    def update(self, codigo, nombre, adicional, descuento, saldo):
+    def update(self, codigo, nombre, adicional, descuento_1, descuento_2, saldo):
         codigo_normalizado = codigo.upper()
         cliente = self.get_by_code(codigo_normalizado)
         if cliente:
             cliente.nombre = nombre
             cliente.adicional = adicional
-            cliente.descuento = descuento
+            cliente.descuento_1 = descuento_1
+            cliente.descuento_2 = descuento_2
             cliente.saldo = saldo
             self._save()
             return True

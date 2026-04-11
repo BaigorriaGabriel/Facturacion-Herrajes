@@ -1,168 +1,110 @@
 [
     {
-        "numero": 8,
-        "cliente_codigo": "C002",
-        "fecha": "2026-03-25",
-        "repartidor": "EDUARDO",
-        "dia_reparto": "Domingo",
-        "items": [
-            {
-                "producto_codigo": "P002",
-                "cantidad": 12,
-                "precio_unitario": 5.0
-            },
-            {
-                "producto_codigo": "P003",
-                "cantidad": 139,
-                "precio_unitario": 3.25
-            }
-        ]
-    },
-    {
-        "numero": 9,
-        "cliente_codigo": "SOD",
-        "fecha": "2026-03-25",
-        "repartidor": "EDUARDO",
-        "dia_reparto": "S\u00e1bado",
-        "items": [
-            {
-                "producto_codigo": "P002",
-                "cantidad": 12,
-                "precio_unitario": 5.0
-            },
-            {
-                "producto_codigo": "P003",
-                "cantidad": 12,
-                "precio_unitario": 3.25
-            },
-            {
-                "producto_codigo": "P001",
-                "cantidad": 7,
-                "precio_unitario": 15.5
-            }
-        ]
-    },
-    {
-        "numero": 10,
-        "cliente_codigo": "SOD",
-        "fecha": "2026-03-25",
-        "repartidor": "EDUARDO",
-        "dia_reparto": "Mi\u00e9rcoles",
-        "items": [
-            {
-                "producto_codigo": "P004",
-                "cantidad": 1,
-                "precio_unitario": 555.0
-            }
-        ]
-    },
-    {
-        "numero": 11,
-        "cliente_codigo": "VIT",
-        "fecha": "2026-03-25",
-        "repartidor": "FRANCO",
-        "dia_reparto": "Jueves",
-        "items": [
-            {
-                "producto_codigo": "P009",
-                "cantidad": 4,
-                "precio_unitario": 150.0
-            },
-            {
-                "producto_codigo": "P001",
-                "cantidad": 45,
-                "precio_unitario": 15.5
-            }
-        ]
-    },
-    {
-        "numero": 13,
-        "cliente_codigo": "C012",
-        "fecha": "2026-04-09",
-        "repartidor": "FRANCO",
-        "dia_reparto": "Jueves",
-        "items": [
-            {
-                "producto_codigo": "P003",
-                "cantidad": 70,
-                "precio_unitario": 3.25
-            }
-        ]
-    },
-    {
-        "numero": 14,
-        "cliente_codigo": "C002",
-        "fecha": "2026-04-09",
-        "repartidor": "EDUARDO",
-        "dia_reparto": "Mi\u00e9rcoles",
-        "items": [
-            {
-                "producto_codigo": "P007",
-                "cantidad": 13,
-                "precio_unitario": 800.0
-            },
-            {
-                "producto_codigo": "P009",
-                "cantidad": 7,
-                "precio_unitario": 200.0
-            },
-            {
-                "producto_codigo": "P004",
-                "cantidad": 8,
-                "precio_unitario": 555.0
-            },
-            {
-                "producto_codigo": "P002",
-                "cantidad": 152,
-                "precio_unitario": 5.0
-            },
-            {
-                "producto_codigo": "P001",
-                "cantidad": 44,
-                "precio_unitario": 15.5
-            }
-        ]
-    },
-    {
-        "numero": 15,
-        "cliente_codigo": "MAR902",
+        "numero": 1,
+        "cliente_codigo": "C001",
         "fecha": "2026-04-10",
         "repartidor": "FRANCO",
-        "dia_reparto": "Jueves",
+        "dia_reparto": "Viernes",
         "items": [
             {
                 "producto_codigo": "P003",
-                "cantidad": 30,
+                "cantidad": 14,
                 "precio_unitario": 3.25
-            },
-            {
-                "producto_codigo": "P007",
-                "cantidad": 3,
-                "precio_unitario": 800.0
-            },
-            {
-                "producto_codigo": "P002",
-                "cantidad": 64,
-                "precio_unitario": 5.0
             }
         ]
     },
     {
-        "numero": 16,
-        "cliente_codigo": "RUB700",
+        "numero": 2,
+        "cliente_codigo": "C002",
         "fecha": "2026-04-10",
-        "repartidor": "franco",
+        "repartidor": "FABIAN",
         "dia_reparto": "Viernes",
         "items": [
             {
                 "producto_codigo": "P001",
-                "cantidad": 45,
+                "cantidad": 12,
                 "precio_unitario": 15.5
             },
             {
-                "producto_codigo": "P006",
+                "producto_codigo": "P002",
+                "cantidad": 3,
+                "precio_unitario": 5.0
+            }
+        ]
+    },
+    {
+        "numero": 3,
+        "cliente_codigo": "C004",
+        "fecha": "2026-04-10",
+        "repartidor": "FABIAN",
+        "dia_reparto": "Jueves",
+        "items": [
+            {
+                "producto_codigo": "P002",
                 "cantidad": 10,
-                "precio_unitario": 7.5
+                "precio_unitario": 5.0
+            },
+            {
+                "producto_codigo": "P009",
+                "cantidad": 12,
+                "precio_unitario": 200.0
+            }
+        ]
+    },
+    {
+        "numero": 4,
+        "cliente_codigo": "C002",
+        "fecha": "2026-04-10",
+        "repartidor": "FRANCO",
+        "dia_reparto": "Jueves",
+        "items": [
+            {
+                "producto_codigo": "P003",
+                "cantidad": 12,
+                "precio_unitario": 3.25
+            },
+            {
+                "producto_codigo": "P004",
+                "cantidad": 10,
+                "precio_unitario": 555.0
+            }
+        ]
+    },
+    {
+        "numero": 5,
+        "cliente_codigo": "C004",
+        "fecha": "2026-04-11",
+        "repartidor": "FRANCO",
+        "dia_reparto": "Viernes",
+        "items": [
+            {
+                "producto_codigo": "P010",
+                "cantidad": 12,
+                "precio_unitario": 20.0
+            },
+            {
+                "producto_codigo": "P009",
+                "cantidad": 2,
+                "precio_unitario": 150.0
+            },
+            {
+                "producto_codigo": "P004",
+                "cantidad": 12,
+                "precio_unitario": 555.0
+            }
+        ]
+    },
+    {
+        "numero": 6,
+        "cliente_codigo": "C004",
+        "fecha": "2026-04-11",
+        "repartidor": "EDUARDO",
+        "dia_reparto": "Mi\u00e9rcoles",
+        "items": [
+            {
+                "producto_codigo": "P010",
+                "cantidad": 13,
+                "precio_unitario": 20.0
             }
         ]
     }
