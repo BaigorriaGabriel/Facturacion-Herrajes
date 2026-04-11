@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "cliente_codigo": "C002",
+        "monto": 790.0,
+        "fecha": "2009-12-20",
+        "comentario": "asd"
+    },
+    {
+        "id": 2,
+        "cliente_codigo": "C003",
+        "monto": 100.0,
+        "fecha": "2026-11-30",
+        "comentario": "asd"
+    },
+    {
+        "id": 3,
+        "cliente_codigo": "C002",
+        "monto": 5600.0,
+        "fecha": "2026-04-02",
+        "comentario": "pago las herramientas enviadas el 15/6"
+    },
+    {
+        "id": 4,
+        "cliente_codigo": "C002",
+        "monto": 505.0,
+        "fecha": "2026-02-02",
+        "comentario": ""
+    },
+    {
+        "id": 5,
+        "cliente_codigo": "C002",
+        "monto": 500.0,
+        "fecha": "2002-11-30",
+        "comentario": ""
+    },
+    {
+        "id": 6,
+        "cliente_codigo": "C002",
+        "monto": 100.0,
+        "fecha": "2000-12-31",
+        "comentario": "asd"
+    },
+    {
+        "id": 7,
+        "cliente_codigo": "C002",
+        "monto": 900.0,
+        "fecha": "2026-04-11",
+        "comentario": "pago los picaportes"
+    },
+    {
+        "id": 8,
+        "cliente_codigo": "C002",
+        "monto": 1000.0,
+        "fecha": "2026-04-10",
+        "comentario": "pago ayer los tubos"
+    }
+]

@@ -9,14 +9,17 @@ from ui.clientes_view import ClientesView
 from ui.productos_view import ProductosView
 from ui.facturas_view import FacturasView
 from ui.factura_form_view import FacturaFormView
+from ui.pagos_view import PagosView
 
 from repositories.cliente_repository import ClienteRepository
 from repositories.producto_repository import ProductoRepository
 from repositories.factura_repository import FacturaRepository
+from repositories.pago_repository import PagoRepository
 
 from services.cliente_service import ClienteService
 from services.producto_service import ProductoService
 from services.factura_service import FacturaService
+from services.pago_service import PagoService
 
 def setup_temporary_data():
     """Crea archivos de datos temporales si no existen para demostración."""
@@ -61,7 +64,7 @@ class App(tk.Tk):
         
         # 4. Pass services to the UI frames
         # The controller (self) now holds the services
-        views = (MainMenu, ClientesView, ProductosView, FacturasView, FacturaFormView)
+        views = (MainMenu, ClientesView, ProductosView, FacturasView, FacturaFormView, PagosView)
         for F in views:
             page_name = F.__name__
             frame = F(parent=container, controller=self)
@@ -88,15 +91,17 @@ class App(tk.Tk):
         self.style.map("Accent.TButton", background=[("active", "#229954")])
         
     def _initialize_services(self):
-        # Repositories
+        # Repositories - ClienteRepository debe cargarse primero
         cliente_repo = ClienteRepository()
         producto_repo = ProductoRepository()
         factura_repo = FacturaRepository(cliente_repo, producto_repo)
+        pago_repo = PagoRepository(cliente_repo)  # Inyectar cliente_repo
         
         # Services - store them on the controller
         self.cliente_service = ClienteService(cliente_repo)
         self.producto_service = ProductoService(producto_repo)
         self.factura_service = FacturaService(factura_repo, self.cliente_service)
+        self.pago_service = PagoService(pago_repo, self.cliente_service)
 
     def _create_main_container(self):
         container = ttk.Frame(self)

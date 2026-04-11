@@ -107,5 +107,33 @@
                 "precio_unitario": 20.0
             }
         ]
+    },
+    {
+        "numero": 7,
+        "cliente_codigo": "C002",
+        "fecha": "2026-04-11",
+        "repartidor": "FRANCO",
+        "dia_reparto": "Mi\u00e9rcoles",
+        "items": [
+            {
+                "producto_codigo": "P004",
+                "cantidad": 12,
+                "precio_unitario": 555.0
+            }
+        ]
+    },
+    {
+        "numero": 8,
+        "cliente_codigo": "C002",
+        "fecha": "2026-04-11",
+        "repartidor": "FABIAN",
+        "dia_reparto": "Mi\u00e9rcoles",
+        "items": [
+            {
+                "producto_codigo": "P004",
+                "cantidad": 13,
+                "precio_unitario": 555.0
+            }
+        ]
     }
 ]

@@ -1,7 +1,7 @@
 # CONTEXTO_PROYECTO.md - Sistema de Facturación
 
-**Versión:** 1.1  
-**Última actualización:** 10 de abril de 2026  
+**Versión:** 1.2  
+**Última actualización:** 11 de abril de 2026  
 **Estado:** Activo y en desarrollo
 
 ---
@@ -149,6 +149,36 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - Editar factura → Resta el viejo total y suma el nuevo
 - Eliminar factura → Resta el total del saldo del cliente
 
+### 5.4 Gestión de Pagos
+
+**Pantalla:** PagosView
+
+**Campos de pago:**
+- `id` (autonumérico, único, no editable)
+- `cliente` (seleccionado mediante buscador)
+- `monto` (monto del pago)
+- `fecha` (por defecto: hoy)
+- `comentario` (texto opcional)
+
+**Operaciones:**
+- ✅ Crear pago
+- ✅ Eliminar pago
+- ✅ Listar pagos con buscador/filtro
+
+**Comportamiento del saldo:**
+- ✅ Al crear pago → **Resta el monto del saldo del cliente**
+- ✅ Al eliminar pago → **Suma el monto de vuelta al saldo del cliente**
+
+**Generación de ID:**
+- ID se asigna automáticamente (autonumérico incremental)
+- No puede ser editado por el usuario
+- No necesita ingreso manual
+
+**Notas importantes:**
+- Las facturas **suman** al saldo
+- Los pagos **restan** al saldo
+- El saldo del cliente se actualiza automáticamente en ambos casos
+
 ---
 
 ## 6. Estructura de Datos (Models)
@@ -197,6 +227,20 @@ class Factura:
     - subtotal_general: float (calculado)
     - total: float (calculado con descuento)
 ```
+
+### Pago
+```python
+class Pago:
+    - id: int (autonumérico, único, no editable)
+    - cliente: Cliente
+    - monto: float
+    - fecha: date
+    - comentario: str (opcional)
+```
+**Comportamiento:**
+- El ID se genera automáticamente (incremental)
+- Al crear un pago: **resta el monto del saldo del cliente**
+- Al eliminar un pago: **suma el monto de vuelta al saldo del cliente**
 
 ---
 
@@ -489,6 +533,40 @@ class Factura:
 ## 13. Cambios Recientes
 
 Este registro mantiene un histórico de cambios significativos para referencia futura.
+
+### 2026-04-11 - Gestión de Pagos: ID autonumérico e integración con saldo
+
+**Cambios:**
+- ✅ Nueva entidad: `Pago` con ID autonumérico (no editable)
+- ✅ Nuevo servicio: `PagoService` que gestiona crear/eliminar pagos
+- ✅ Nuevo repositorio: `PagoRepository` con persistencia en JSON
+- ✅ Nueva vista: `PagosView` con tabla, filtros y buscadores
+- ✅ Formulario de pago con ID readonly, cliente (buscador), monto, fecha, comentario
+- ✅ Integración con saldo del cliente:
+  - Crear pago → **resta** el monto del saldo
+  - Eliminar pago → **suma** el monto de vuelta al saldo
+- ✅ Botón "Gestionar Pagos" agregado al menú principal
+
+**Archivos creados:**
+- `models.py` (agregada clase `Pago`)
+- `repositories/pago_repository.py` (new)
+- `services/pago_service.py` (new)
+- `ui/pagos_view.py` (new)
+
+**Archivos modificados:**
+- `main.py` (integración de PagosView y PagoService)
+- `ui/main_menu.py` (botón "Gestionar Pagos")
+- `CONTEXTO_PROYECTO.md` (documentación)
+
+**Estado:** Sistema completamente funcional con gestión de pagos
+
+**Notas técnicas:**
+- ID se genera automáticamente en el repositorio (incremental)
+- Pagos están en memoria, persistidos en `data/pagos.json`
+- El saldo del cliente se actualiza automáticamente
+- Los cambios en saldo se reflejan inmediatamente en la tabla de clientes
+
+---
 
 ### 2026-04-10 - Cambio en sistema de descuentos: bloques de 8% compuestos
 

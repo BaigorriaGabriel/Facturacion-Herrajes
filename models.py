@@ -143,3 +143,34 @@ class Factura:
             factura.calcular_totales()
             return factura
         return None
+
+class Pago:
+    def __init__(self, cliente, monto, fecha=None, comentario="", pago_id=None):
+        self.id = pago_id
+        self.cliente = cliente
+        self.monto = monto
+        self.fecha = fecha if fecha else datetime.date.today()
+        self.comentario = comentario
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "cliente_codigo": self.cliente.codigo if self.cliente else None,
+            "monto": self.monto,
+            "fecha": self.fecha.isoformat(),
+            "comentario": self.comentario
+        }
+
+    @staticmethod
+    def from_dict(data, clientes):
+        cliente = next((c for c in clientes if c.codigo == data["cliente_codigo"]), None)
+        if cliente:
+            pago = Pago(
+                cliente=cliente,
+                monto=data["monto"],
+                fecha=datetime.date.fromisoformat(data["fecha"]),
+                comentario=data.get("comentario", ""),
+                pago_id=data["id"]
+            )
+            return pago
+        return None
