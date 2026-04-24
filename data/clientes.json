@@ -30,5 +30,13 @@
         "descuento_1": true,
         "descuento_2": true,
         "saldo": 920.0640000000001
+    },
+    {
+        "codigo": "C005",
+        "nombre": "Augusto",
+        "adicional": "Universidad Tecnologica Nacional",
+        "descuento_1": false,
+        "descuento_2": true,
+        "saldo": 1.5199999999999818
     }
 ]

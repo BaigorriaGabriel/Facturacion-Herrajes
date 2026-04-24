@@ -75,5 +75,12 @@
         "monto": 566.0,
         "fecha": "2026-04-11",
         "comentario": "asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdasdasd asdsdsdsdsdsdererrererererererererere"
+    },
+    {
+        "id": 13,
+        "cliente_codigo": "C005",
+        "monto": 740.0,
+        "fecha": "2026-04-24",
+        "comentario": "Pago de la factura realizada el 24/04/2026"
     }
 ]
