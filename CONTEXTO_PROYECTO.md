@@ -1,8 +1,10 @@
 # CONTEXTO_PROYECTO.md - Sistema de Facturación
 
-**Versión:** 1.2  
-**Última actualización:** 11 de abril de 2026  
+**Versión:** 1.3  
+**Última actualización:** 26 de abril de 2026  
 **Estado:** Activo y en desarrollo
+
+> **⚠️ IMPORTANTE:** Este archivo debe mantenerse actualizado conforme se realizan modificaciones en el código. Cualquier cambio en funcionalidades, interfaz, lógica o comportamiento debe ser documentado aquí inmediatamente.
 
 ---
 
@@ -46,19 +48,19 @@ Desarrollar una herramienta de facturación simple y funcional que:
 
 **🟢 Completamente funcional en memoria:**
 
-- Sistema CRUD completo para las 3 entidades principales
+- Sistema CRUD completo para las 3 entidades principales (Clientes, Productos, Facturas, Pagos)
 - Interfaz gráfica operativa
 - Cálculos de facturas funcionando
 - Buscadores implementados
 - Filtros en tablas implementados
 - Almacenamiento en JSON (datos en memoria)
+- ✅ Sistema de aumentos masivos de precios con selección avanzada
 
 **❌ NO implementado aún:**
 
 - Base de datos SQL
 - Persistencia real (entre sesiones)
 - Exportación a PDF
-- Aumentos masivos de precios
 
 ---
 
@@ -178,6 +180,89 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - Las facturas **suman** al saldo
 - Los pagos **restan** al saldo
 - El saldo del cliente se actualiza automáticamente en ambos casos
+
+### 5.5 Aumentos de Precios
+
+**Pantalla:** AumentosPreciosView
+
+**Objetivo:** Aplicar aumentos masivos de precios a múltiples productos con selección avanzada, validaciones y confirmación con preview.
+
+**Componentes de interfaz:**
+- **Buscador**: Filtra productos por código o descripción (búsqueda en tiempo real)
+- **Lista de productos**: Tabla con columnas:
+  - Seleccionar (ancho: 45px) - ☐/☑ Checkbox individual
+  - Código
+  - Descripción
+  - Precio actual
+- **Checkbox "Seleccionar todos"**: Selecciona/deselecciona todos los productos visibles (filtrados)
+  - **Comportamiento inteligente**: Solo aparece marcado si TODOS los productos visibles están seleccionados
+  - Si se aplica filtro y se seleccionan todos → checkbox ✅
+  - Si se cambia de filtro → checkbox aparece ☐ (pero los productos anteriores siguen seleccionados)
+  - Si se aplica otro filtro y hay productos no seleccionados entre los visibles → checkbox ☐
+- **Contador dinámico**: Muestra "X productos seleccionados" (se actualiza en tiempo real)
+- **Botón "Limpiar selección"**: Desmarca todos los productos
+- **Input de porcentaje**: Campo numérico para ingresar el % de aumento
+- **Botón "Aplicar aumento"**: Inicia el proceso de aumento
+
+**Interacción con checkboxes:**
+- ✅ Click en checkbox: Solo se activa si se clickea directamente en el cuadrado del checkbox (área central)
+- ✅ Click en otra parte de la fila: No selecciona (previene errores por clicks accidentales)
+- ✅ Validación de área: Solo activa si el click está dentro del ±25% del ancho de la columna
+
+**Validaciones:**
+- ✅ Porcentaje > 0
+- ✅ Al menos un producto seleccionado
+
+**Flujo de aumento:**
+
+1. Usuario selecciona productos (individual o todos)
+2. Ingresa porcentaje de aumento (ej: 10 para 10%)
+3. Hace clic en "Aplicar aumento"
+4. Sistema valida:
+   - Porcentaje > 0
+   - Al menos un producto
+5. Se abre popup de confirmación (tamaño: 650x650px) que muestra:
+   - Mensaje: "¿Seguro que querés aplicar un aumento del X% a N productos seleccionados?"
+   - Lista completa de todos los productos a aumentar:
+     - Código - Descripción: $precio_actual → $nuevo_precio
+     - Scrollable si hay muchos productos
+   - Etiqueta: "Productos a aumentar (X):" donde X es la cantidad total
+   - Botones: "Sí, aplicar" y "Cancelar"
+6. Si confirma:
+   - Calcula nuevo precio: `nuevo_precio = precio * (1 + porcentaje / 100)`
+   - Redondea a 2 decimales
+   - Actualiza cada producto en el repositorio
+   - Muestra mensaje de éxito
+   - **Limpia el campo de porcentaje (vuelve a 0)**
+   - Limpia la selección de productos
+   - Recarga la lista de productos
+7. Si cancela: cierra el popup
+
+**Características importantes:**
+
+- **NO modifica facturas existentes**: Los precios ya grabados en facturas no cambian
+- **Afecta futuros usos**: Solo impacta en nuevas facturas
+- **Actualización en tiempo real**: La tabla se actualiza inmediatamente
+- **Interfaz consistente**: Usa los mismos estilos y componentes del resto del sistema
+- **Checkbox inteligente**: "Seleccionar todos" refleja solo el estado de los productos visibles
+- **Campo de porcentaje auto-limpiable**: Se resetea a 0 después de aplicar un aumento exitosamente
+- **Prevención de errores**: Área reducida de click en checkbox evita selecciones accidentales
+- **Popup optimizado**: Tamaño 650x650px para mostrar todos los elementos sin necesidad de redimensionar
+- **Lista completa de productos**: Muestra TODOS los productos a aumentar (no solo ejemplos) con scroll si es necesario
+- **Visibilidad total**: El usuario puede verificar exactamente qué productos se van a aumentar antes de confirmar
+
+**Lógica de negocio (ProductoService.apply_price_increase):**
+
+```python
+def apply_price_increase(self, producto_codigos, porcentaje):
+    """Aplica aumento de precio a múltiples productos"""
+    # Validar porcentaje > 0
+    # Validar al menos un producto
+    # Para cada producto:
+    #   nuevo_precio = precio_actual * (1 + porcentaje / 100)
+    #   redondear a 2 decimales
+    #   actualizar en repository
+```
 
 ---
 
@@ -460,6 +545,7 @@ class Pago:
 | 2026-04-09 | Filtros en tablas | Agregados en ClientesView, ProductosView, FacturasView |
 | 2026-04-09 | Refactor de arquitectura | Separación en UI, Services, Models, Repositories |
 | 2026-04-09 | Actualización de saldos | Automática al crear/editar/eliminar facturas |
+| 2026-04-24 | Aumentos masivos de precios | Sección completa con selección avanzada, checkboxes, filtrado, contador, confirmación y preview |
 
 ---
 

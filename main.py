@@ -10,6 +10,7 @@ from ui.productos_view import ProductosView
 from ui.facturas_view import FacturasView
 from ui.factura_form_view import FacturaFormView
 from ui.pagos_view import PagosView
+from ui.aumentos_precios_view import AumentosPreciosView
 
 from repositories.cliente_repository import ClienteRepository
 from repositories.producto_repository import ProductoRepository
@@ -64,7 +65,7 @@ class App(tk.Tk):
         
         # 4. Pass services to the UI frames
         # The controller (self) now holds the services
-        views = (MainMenu, ClientesView, ProductosView, FacturasView, FacturaFormView, PagosView)
+        views = (MainMenu, ClientesView, ProductosView, FacturasView, FacturaFormView, PagosView, AumentosPreciosView)
         for F in views:
             page_name = F.__name__
             frame = F(parent=container, controller=self)

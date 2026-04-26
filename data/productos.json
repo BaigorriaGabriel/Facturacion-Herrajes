@@ -2,46 +2,41 @@
     {
         "codigo": "P001",
         "descripcion": "Martillo de Carpintero",
-        "precio": 15.5
+        "precio": 75.02
     },
     {
         "codigo": "P002",
         "descripcion": "Destornillador Phillips #2",
-        "precio": 5.0
+        "precio": 24.2
     },
     {
         "codigo": "P003",
         "descripcion": "Caja de 100 Clavos de 2 pulgadas",
-        "precio": 3.25
+        "precio": 31.46
     },
     {
         "codigo": "P004",
         "descripcion": "Cinta Metrica 5m",
-        "precio": 555.0
+        "precio": 2820.51
     },
     {
         "codigo": "P006",
         "descripcion": "Bolsa de Cemento 25kg",
-        "precio": 7.5
-    },
-    {
-        "codigo": "P007",
-        "descripcion": "Lata de Pintura Blan",
-        "precio": 800.0
+        "precio": 975.74
     },
     {
         "codigo": "P008",
         "descripcion": "Tubo PVC 1/2 pul",
-        "precio": 32.0
+        "precio": 309.76
     },
     {
         "codigo": "P010",
         "descripcion": "Picaporte 72x8",
-        "precio": 20.0
+        "precio": 193.6
     },
     {
         "codigo": "P009",
         "descripcion": "Termo Stanley",
-        "precio": 150.0
+        "precio": 1452.0
     }
 ]

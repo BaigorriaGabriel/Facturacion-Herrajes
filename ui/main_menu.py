@@ -13,4 +13,5 @@ class MainMenu(ttk.Frame):
         ttk.Button(main_frame, text="Gestionar Facturas", command=lambda: controller.show_frame("FacturasView")).pack(pady=10, fill="x")
         ttk.Button(main_frame, text="Gestionar Clientes", command=lambda: controller.show_frame("ClientesView")).pack(pady=10, fill="x")
         ttk.Button(main_frame, text="Gestionar Productos", command=lambda: controller.show_frame("ProductosView")).pack(pady=10, fill="x")
+        ttk.Button(main_frame, text="Aumentos de Precios", command=lambda: controller.show_frame("AumentosPreciosView")).pack(pady=10, fill="x")
         ttk.Button(main_frame, text="Gestionar Pagos", command=lambda: controller.show_frame("PagosView")).pack(pady=10, fill="x")
