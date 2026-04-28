@@ -181,11 +181,11 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - Los pagos **restan** al saldo
 - El saldo del cliente se actualiza automáticamente en ambos casos
 
-### 5.5 Aumentos de Precios
+### 5.5 Aumentos y Rebajas de Precios
 
 **Pantalla:** AumentosPreciosView
 
-**Objetivo:** Aplicar aumentos masivos de precios a múltiples productos con selección avanzada, validaciones y confirmación con preview.
+**Objetivo:** Aplicar aumentos o reducciones masivas de precios a múltiples productos con selección avanzada, validaciones y confirmación con preview.
 
 **Componentes de interfaz:**
 - **Buscador**: Filtra productos por código o descripción (búsqueda en tiempo real)
@@ -201,8 +201,11 @@ Desarrollar una herramienta de facturación simple y funcional que:
   - Si se aplica otro filtro y hay productos no seleccionados entre los visibles → checkbox ☐
 - **Contador dinámico**: Muestra "X productos seleccionados" (se actualiza en tiempo real)
 - **Botón "Limpiar selección"**: Desmarca todos los productos
-- **Input de porcentaje**: Campo numérico para ingresar el % de aumento
-- **Botón "Aplicar aumento"**: Inicia el proceso de aumento
+- **Input de porcentaje**: Campo numérico para ingresar el % de cambio
+  - Positivo: aumento de precio (ej: 10 = 10% más caro)
+  - Negativo: rebaja de precio (ej: -10 = 10% más barato)
+  - Rango válido: -100 < valor < infinito
+- **Botón "Aplicar cambio de precio"**: Inicia el proceso de cambio
 
 **Interacción con checkboxes:**
 - ✅ Click en checkbox: Solo se activa si se clickea directamente en el cuadrado del checkbox (área central)
@@ -210,23 +213,27 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - ✅ Validación de área: Solo activa si el click está dentro del ±25% del ancho de la columna
 
 **Validaciones:**
-- ✅ Porcentaje > 0
+- ✅ Porcentaje ≠ 0 (no puede ser exactamente cero)
+- ✅ Porcentaje ≥ -100% (no puede rebajar más del 100%)
 - ✅ Al menos un producto seleccionado
+- ✅ Permite valores positivos (aumentos de precio)
+- ✅ Permite valores negativos (rebajas de precio)
 
-**Flujo de aumento:**
+**Flujo de cambio de precio:**
 
 1. Usuario selecciona productos (individual o todos)
-2. Ingresa porcentaje de aumento (ej: 10 para 10%)
-3. Hace clic en "Aplicar aumento"
+2. Ingresa porcentaje de cambio (ej: 10 para +10%, -5 para -5%)
+3. Hace clic en "Aplicar cambio de precio"
 4. Sistema valida:
-   - Porcentaje > 0
+   - Porcentaje ≠ 0 (no puede ser exactamente cero)
+   - Porcentaje ≥ -100% (no puede rebajar más del 100%)
    - Al menos un producto
 5. Se abre popup de confirmación (tamaño: 650x650px) que muestra:
-   - Mensaje: "¿Seguro que querés aplicar un aumento del X% a N productos seleccionados?"
-   - Lista completa de todos los productos a aumentar:
+   - Mensaje: "¿Seguro que querés aplicar un cambio de X% a N productos seleccionados?"
+   - Lista completa de todos los productos:
      - Código - Descripción: $precio_actual → $nuevo_precio
      - Scrollable si hay muchos productos
-   - Etiqueta: "Productos a aumentar (X):" donde X es la cantidad total
+   - Etiqueta: "Productos a modificar (X):" donde X es la cantidad total
    - Botones: "Sí, aplicar" y "Cancelar"
 6. Si confirma:
    - Calcula nuevo precio: `nuevo_precio = precio * (1 + porcentaje / 100)`
@@ -242,21 +249,23 @@ Desarrollar una herramienta de facturación simple y funcional que:
 
 - **NO modifica facturas existentes**: Los precios ya grabados en facturas no cambian
 - **Afecta futuros usos**: Solo impacta en nuevas facturas
+- **Soporta aumentos y rebajas**: Permite tanto incrementar como reducir precios
 - **Actualización en tiempo real**: La tabla se actualiza inmediatamente
 - **Interfaz consistente**: Usa los mismos estilos y componentes del resto del sistema
 - **Checkbox inteligente**: "Seleccionar todos" refleja solo el estado de los productos visibles
-- **Campo de porcentaje auto-limpiable**: Se resetea a 0 después de aplicar un aumento exitosamente
+- **Campo de porcentaje auto-limpiable**: Se resetea a 0 después de aplicar cambio exitosamente
 - **Prevención de errores**: Área reducida de click en checkbox evita selecciones accidentales
 - **Popup optimizado**: Tamaño 650x650px para mostrar todos los elementos sin necesidad de redimensionar
-- **Lista completa de productos**: Muestra TODOS los productos a aumentar (no solo ejemplos) con scroll si es necesario
-- **Visibilidad total**: El usuario puede verificar exactamente qué productos se van a aumentar antes de confirmar
+- **Lista completa de productos**: Muestra TODOS los productos a modificar (no solo ejemplos) con scroll si es necesario
+- **Visibilidad total**: El usuario puede verificar exactamente qué productos se van a modificar antes de confirmar
 
 **Lógica de negocio (ProductoService.apply_price_increase):**
 
 ```python
 def apply_price_increase(self, producto_codigos, porcentaje):
-    """Aplica aumento de precio a múltiples productos"""
-    # Validar porcentaje > 0
+    """Aplica cambio de precio (aumento o rebaja) a múltiples productos"""
+    # Validar porcentaje ≠ 0
+    # Validar porcentaje ≥ -100%
     # Validar al menos un producto
     # Para cada producto:
     #   nuevo_precio = precio_actual * (1 + porcentaje / 100)

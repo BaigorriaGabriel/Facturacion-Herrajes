@@ -159,5 +159,24 @@
                 "precio_unitario": 15.5
             }
         ]
+    },
+    {
+        "numero": 10,
+        "cliente_codigo": "C004",
+        "fecha": "2026-04-27",
+        "repartidor": "FRANCO",
+        "dia_reparto": "Martes",
+        "items": [
+            {
+                "producto_codigo": "P001",
+                "cantidad": 12,
+                "precio_unitario": 75.02
+            },
+            {
+                "producto_codigo": "P014",
+                "cantidad": 1,
+                "precio_unitario": 482.04
+            }
+        ]
     }
 ]

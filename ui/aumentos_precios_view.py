@@ -235,8 +235,11 @@ class AumentosPreciosView(ttk.Frame):
         # Validar porcentaje
         try:
             porcentaje = self.porcentaje_var.get()
-            if porcentaje <= 0:
-                messagebox.showerror("Error", "El porcentaje debe ser mayor a 0")
+            if porcentaje == 0:
+                messagebox.showerror("Error", "El porcentaje no puede ser 0")
+                return
+            if porcentaje < -100:
+                messagebox.showerror("Error", "El porcentaje no puede ser menor a -100%")
                 return
         except tk.TclError:
             messagebox.showerror("Error", "Ingrese un porcentaje válido")

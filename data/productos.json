@@ -22,21 +22,171 @@
     {
         "codigo": "P006",
         "descripcion": "Bolsa de Cemento 25kg",
-        "precio": 975.74
+        "precio": 1044.04
     },
     {
         "codigo": "P008",
         "descripcion": "Tubo PVC 1/2 pul",
-        "precio": 309.76
+        "precio": 331.44
     },
     {
         "codigo": "P010",
         "descripcion": "Picaporte 72x8",
-        "precio": 193.6
+        "precio": 387.2
     },
     {
         "codigo": "P009",
         "descripcion": "Termo Stanley",
         "precio": 1452.0
+    },
+    {
+        "codigo": "P011",
+        "descripcion": "Tornillo 1/4 x 2 pulgadas",
+        "precio": 0.91
+    },
+    {
+        "codigo": "P012",
+        "descripcion": "Tuerca 1/4 pulgada",
+        "precio": 0.96
+    },
+    {
+        "codigo": "P013",
+        "descripcion": "Arandela 1/4 pulgada",
+        "precio": 0.35
+    },
+    {
+        "codigo": "P014",
+        "descripcion": "Cerradura de Seguridad Profesional",
+        "precio": 482.04
+    },
+    {
+        "codigo": "P015",
+        "descripcion": "Bisagra de Acero 3 pulgadas",
+        "precio": 134.55
+    },
+    {
+        "codigo": "P016",
+        "descripcion": "Gancho de Acero Galvanizado",
+        "precio": 20.22
+    },
+    {
+        "codigo": "P017",
+        "descripcion": "Cadena de Acero 3/8 pulgada",
+        "precio": 262.47
+    },
+    {
+        "codigo": "P018",
+        "descripcion": "Candado de Seguridad 40mm",
+        "precio": 85.6
+    },
+    {
+        "codigo": "P019",
+        "descripcion": "Espiga de Acero 1/2 x 3",
+        "precio": 13.32
+    },
+    {
+        "codigo": "P020",
+        "descripcion": "Pasador de Acero Inoxidable",
+        "precio": 23.62
+    },
+    {
+        "codigo": "P021",
+        "descripcion": "Perno de Anclaje 5/8 x 10",
+        "precio": 155.23
+    },
+    {
+        "codigo": "P022",
+        "descripcion": "Chapa de Embutir Cromada",
+        "precio": 67.5
+    },
+    {
+        "codigo": "P023",
+        "descripcion": "Manija de Puerta Cromada",
+        "precio": 500.0
+    },
+    {
+        "codigo": "P024",
+        "descripcion": "Bisagra Oculta 3 pulgadas",
+        "precio": 298.4
+    },
+    {
+        "codigo": "P025",
+        "descripcion": "Pernio de Acero para Puertas",
+        "precio": 96.03
+    },
+    {
+        "codigo": "P026",
+        "descripcion": "Mosquet\u00c3\u00b3n de Seguridad Aluminio",
+        "precio": 45.2
+    },
+    {
+        "codigo": "P027",
+        "descripcion": "C\u00c3\u00a1ncamo de Acero Galvanizado",
+        "precio": 29.59
+    },
+    {
+        "codigo": "P028",
+        "descripcion": "Tuerca Mariposa Lat\u00c3\u00b3n",
+        "precio": 8.0
+    },
+    {
+        "codigo": "P029",
+        "descripcion": "Rondana de Presi\u00c3\u00b3n",
+        "precio": 1.2
+    },
+    {
+        "codigo": "P030",
+        "descripcion": "Tornillo de Cabeza Cuadrada",
+        "precio": 5.8
+    },
+    {
+        "codigo": "P031",
+        "descripcion": "Esp\u00c3\u00a1rrago de Acero Inoxidable",
+        "precio": 36.91
+    },
+    {
+        "codigo": "P032",
+        "descripcion": "Gozne de Acero 90 grados",
+        "precio": 191.42
+    },
+    {
+        "codigo": "P033",
+        "descripcion": "Pasador de Seguridad",
+        "precio": 56.4
+    },
+    {
+        "codigo": "P034",
+        "descripcion": "Varilla Roscada M6 x 1m",
+        "precio": 89.3
+    },
+    {
+        "codigo": "P035",
+        "descripcion": "Tuerca Autoblocante Acero",
+        "precio": 18.72
+    },
+    {
+        "codigo": "P036",
+        "descripcion": "Clavo de Acero Galvanizado 4 pulgadas",
+        "precio": 19.8
+    },
+    {
+        "codigo": "P037",
+        "descripcion": "Pletina de Acero 1/4 x 2",
+        "precio": 176.98
+    },
+    {
+        "codigo": "P038",
+        "descripcion": "Gafete de Acero Cromado",
+        "precio": 45.8
+    },
+    {
+        "codigo": "P039",
+        "descripcion": "Chapa de Cierre Magn\u00c3\u00a9tica",
+        "precio": 312.5
+    },
+    {
+        "codigo": "P040",
+        "descripcion": "Pernio Doble Acci\u00c3\u00b3n",
+        "precio": 245.7
     }
 ]

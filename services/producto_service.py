@@ -26,20 +26,23 @@ class ProductoService:
 
     def apply_price_increase(self, producto_codigos, porcentaje):
         """
-        Aplica un aumento de precio a múltiples productos.
+        Aplica un cambio de precio a múltiples productos.
         
         Args:
             producto_codigos: Lista de códigos de productos
-            porcentaje: Porcentaje de aumento (ej: 10 para 10%)
+            porcentaje: Porcentaje de cambio (ej: 10 para +10%, -5 para -5%)
         
         Returns:
             Número de productos actualizados
         
         Raises:
-            ValueError: Si porcentaje <= 0 o si no hay productos a actualizar
+            ValueError: Si porcentaje == 0, porcentaje < -100 o si no hay productos a actualizar
         """
-        if porcentaje <= 0:
-            raise ValueError("El porcentaje debe ser mayor a 0")
+        if porcentaje == 0:
+            raise ValueError("El porcentaje no puede ser 0")
+        
+        if porcentaje < -100:
+            raise ValueError("El porcentaje no puede ser menor a -100%")
         
         if not producto_codigos or len(producto_codigos) == 0:
             raise ValueError("Debe seleccionar al menos un producto")
