@@ -178,5 +178,24 @@
                 "precio_unitario": 482.04
             }
         ]
+    },
+    {
+        "numero": 11,
+        "cliente_codigo": "C004",
+        "fecha": "2026-04-29",
+        "repartidor": "",
+        "dia_reparto": "",
+        "items": [
+            {
+                "producto_codigo": "P003",
+                "cantidad": 1,
+                "precio_unitario": 31.46
+            },
+            {
+                "producto_codigo": "P041",
+                "cantidad": 1,
+                "precio_unitario": 75.0
+            }
+        ]
     }
 ]

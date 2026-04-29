@@ -23,8 +23,8 @@ class ProductosView(ttk.Frame):
         search_frame.pack(fill="x", padx=10, pady=5)
 
         self.search_vars = {}
-        cols = ("Codigo", "Descripcion", "Precio")
-        col_widths = {"Codigo": 80, "Descripcion": 250, "Precio": 120}
+        cols = ("Codigo", "Descripcion", "Precio", "PrecioRecomendado")
+        col_widths = {"Codigo": 80, "Descripcion": 250, "Precio": 120, "PrecioRecomendado": 150}
         
         # Configurar columnas con grid basado en anchos de tabla
         for idx, col in enumerate(cols):
@@ -45,13 +45,15 @@ class ProductosView(ttk.Frame):
         table_frame.grid_rowconfigure(0, weight=1)
         table_frame.grid_columnconfigure(0, weight=1)
         
-        self.tree = ttk.Treeview(table_frame, columns=cols, show="headings")
-        for col in cols: self.tree.heading(col, text=col.replace("Descripcion", "Descripción"))
+        cols_tabla = ("Codigo", "Descripcion", "Precio", "PrecioRecomendado")
+        self.tree = ttk.Treeview(table_frame, columns=cols_tabla, show="headings")
+        for col in cols_tabla: self.tree.heading(col, text=col.replace("Descripcion", "Descripción").replace("PrecioRecomendado", "Precio Recomendado (+80%)"))
         self.tree.heading("Precio", text="Precio Unitario")
         # Configurar ancho de columnas
         self.tree.column("Codigo", width=80, anchor="center")
         self.tree.column("Descripcion", width=250, anchor="w")
         self.tree.column("Precio", width=120, anchor="e")
+        self.tree.column("PrecioRecomendado", width=150, anchor="e")
         # Agregar scrollbars como miembros de table_frame
         vsb = ttk.Scrollbar(table_frame, orient="vertical", command=self.tree.yview)
         hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=self.tree.xview)
@@ -79,13 +81,22 @@ class ProductosView(ttk.Frame):
         
         search_terms = {col: var.get().lower() for col, var in self.search_vars.items()}
         
-        productos_filtrados = [
-            p for p in productos if
-            all(search_terms[col] in str(getattr(p, col.lower())).lower() for col in self.search_vars)
-        ]
+        productos_filtrados = []
+        for p in productos:
+            precio_recomendado = self.controller.producto_service.get_precio_recomendado(p.precio)
+            
+            # Validar filtros para Codigo, Descripcion, Precio
+            if not all(search_terms[col] in str(getattr(p, col.lower())).lower() for col in ["Codigo", "Descripcion", "Precio"]):
+                continue
+            
+            # Validar filtro para Precio Recomendado
+            if search_terms["PrecioRecomendado"] and search_terms["PrecioRecomendado"] not in f"{precio_recomendado:.2f}".lower():
+                continue
+            
+            productos_filtrados.append((p, precio_recomendado))
 
-        for p in productos_filtrados: 
-            self.tree.insert("", "end", values=(p.codigo, p.descripcion, f"{p.precio:.2f}"))
+        for p, precio_recomendado in productos_filtrados:
+            self.tree.insert("", "end", values=(p.codigo, p.descripcion, f"{p.precio:.2f}", f"${precio_recomendado:.2f}"))
         self._on_tree_select()
 
     def open_form_producto(self, producto=None): 

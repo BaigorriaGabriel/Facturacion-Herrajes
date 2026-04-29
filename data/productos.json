@@ -188,5 +188,10 @@
         "codigo": "P040",
         "descripcion": "Pernio Doble Acci\u00c3\u00b3n",
         "precio": 245.7
+    },
+    {
+        "codigo": "P041",
+        "descripcion": "Bisagra triple ala",
+        "precio": 84.0
     }
 ]

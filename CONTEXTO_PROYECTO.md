@@ -1,7 +1,7 @@
 # CONTEXTO_PROYECTO.md - Sistema de Facturación
 
-**Versión:** 1.3  
-**Última actualización:** 26 de abril de 2026  
+**Versión:** 1.4  
+**Última actualización:** 29 de abril de 2026  
 **Estado:** Activo y en desarrollo
 
 > **⚠️ IMPORTANTE:** Este archivo debe mantenerse actualizado conforme se realizan modificaciones en el código. Cualquier cambio en funcionalidades, interfaz, lógica o comportamiento debe ser documentado aquí inmediatamente.
@@ -54,7 +54,8 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - Buscadores implementados
 - Filtros en tablas implementados
 - Almacenamiento en JSON (datos en memoria)
-- ✅ Sistema de aumentos masivos de precios con selección avanzada
+- ✅ Sistema de aumentos/rebajas masivos de precios con selección avanzada
+- ✅ Columna de Precio Recomendado (+80%) en tabla de productos
 
 **❌ NO implementado aún:**
 
@@ -95,10 +96,16 @@ Desarrollar una herramienta de facturación simple y funcional que:
 
 **Pantalla:** ProductosView
 
-**Campos de producto:**
+**Campos de producto (edición/creación):**
 - `codigo` (único, clave primaria)
 - `descripcion` (nombre/descripción del producto)
 - `precio` (precio unitario actual)
+
+**Columnas de visualización en tabla:**
+- Código
+- Descripción
+- Precio Unitario
+- **Precio Recomendado (+80%)** - Calculado automáticamente como `precio * 1.80` (sin edición)
 
 **Operaciones:**
 - ✅ Crear producto
@@ -110,6 +117,11 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - El precio es el precio actual en catálogo
 - Cuando se agrega un producto a una factura, el precio se COPIA al item
 - Cambios de precio en el catálogo NO afectan facturas ya creadas
+- El Precio Recomendado (+80%) se calcula automáticamente solo para visualización
+  - Se usa como recomendación de precio de reventa para clientes
+  - No es editable, se actualiza automáticamente cuando cambia el precio unitario
+  - Aparece con formato moneda ($)
+  - **Lógica centralizada en ProductoService.get_precio_recomendado()** para facilitar migraciones a BD
 
 ### 5.3 Gestión de Facturas
 
@@ -417,9 +429,49 @@ class Pago:
 
 ---
 
-## 8. Decisiones de Diseño (Muy Importante)
+## 8. Métodos Centralizados de Servicios
 
-### 8.1 "TODO en memoria" (por ahora)
+### 8.1 ProductoService
+
+**Método: get_precio_recomendado(precio)**
+
+```python
+PORCENTAJE_RECOMENDADO = 80  # Constante de clase
+
+def get_precio_recomendado(self, precio):
+    """
+    Calcula el precio recomendado (+80%) para un producto.
+    
+    Args:
+        precio: float - Precio unitario del producto
+    
+    Returns:
+        float - Precio recomendado (precio * 1.80), redondeado a 2 decimales
+    
+    Propósito:
+    - Centralizar la lógica de cálculo de precio recomendado
+    - Facilitar cambios futuros sin tocar múltiples vistas
+    - Preparar para migración a BD (solo cambiar aquí la implementación)
+    
+    Uso actual:
+    - ProductosView.actualizar_lista() → muestra precio recomendado en tabla
+    
+    Uso futuro (BD):
+    - En SQLite, puede implementarse como COMPUTED COLUMN o calcularse aquí
+    """
+```
+
+**Ventajas de esta centralización:**
+- ✅ Cambiar el porcentaje: editar solo una línea en ProductoService.PORCENTAJE_RECOMENDADO
+- ✅ Futura migración a BD: solo cambiar la implementación de este método
+- ✅ Reutilizable: cualquier vista puede usar este método
+- ✅ Consistencia: un único lugar donde se define la lógica
+
+---
+
+## 9. Decisiones de Diseño (Muy Importante)
+
+### 9.1 "TODO en memoria" (por ahora)
 
 **Decisión:** El sistema almacena datos en JSON en memoria, NO en base de datos.
 
@@ -435,7 +487,7 @@ class Pago:
 **Futuro:**
 - Se reemplazará con SQLite manteniendo la misma interfaz
 
-### 8.2 Separación en capas
+### 9.2 Separación en capas
 
 **Decisión:** La arquitectura se divide en 3 capas (UI, Services, Models).
 

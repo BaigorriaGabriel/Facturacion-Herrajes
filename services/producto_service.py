@@ -3,11 +3,27 @@ from models import Producto
 from repositories.producto_repository import ProductoRepository
 
 class ProductoService:
+    # Configuración de precio recomendado
+    PORCENTAJE_RECOMENDADO = 80  # +80% de aumento
+    
     def __init__(self, repository: ProductoRepository):
         self._repository = repository
 
     def get_all_products(self):
         return self._repository.get_all()
+
+    def get_precio_recomendado(self, precio):
+        """
+        Calcula el precio recomendado (+80%) para un producto.
+        
+        Args:
+            precio: Precio unitario del producto
+        
+        Returns:
+            float: Precio recomendado (precio * 1.80)
+        """
+        precio_recomendado = precio * (1 + self.PORCENTAJE_RECOMENDADO / 100)
+        return round(precio_recomendado, 2)
 
     def create_product(self, codigo, descripcion, precio):
         if self._repository.get_by_code(codigo):
