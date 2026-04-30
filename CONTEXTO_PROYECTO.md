@@ -539,7 +539,51 @@ def get_precio_recomendado(self, precio):
 
 ---
 
-## 9. Flujo de Uso del Sistema
+## 10. PREPARACIÓN PARA MIGRACIÓN A BD (SQLite)
+
+### ⚠️ IMPORTANTE PARA MIGRACIÓN
+
+El código está diseñado y centralizado para facilitar la migración a SQLite sin tocar la UI.
+
+**Qué cambiar:**
+1. **Repositories** (`repositories/*.py`)
+   - Cambiar de: lectura/escritura de JSON
+   - Cambiar a: consultas SQLite
+   - Que devuelvan: los mismos objetos (Cliente, Producto, etc.)
+
+2. **Services** (parcialmente)
+   - La mayoría **NO necesita cambios**
+   - EXCEPTO métodos de cálculo que sean complejos:
+     - `ProductoService.get_precio_recomendado()` - ✅ YA centralizado
+     - `FacturaService` cálculos de descuentos - revisar
+
+3. **UI** - ❌ **NO cambiar nada**
+   - Las vistas llaman a Services
+   - Services llaman a Repositories
+   - Cambiar Repositories = cambiar persistencia sin tocar UI
+
+**Métodos centralizados (preparados para BD):**
+
+| Método | Servicio | Razón |
+|--------|----------|-------|
+| `get_precio_recomendado(precio)` | ProductoService | +80% recomendado, centralizado para evitar duplicar lógica |
+| `apply_price_increase()` | ProductoService | Cambios masivos de precio |
+| Cálculos de factura | FacturaService | Totales y descuentos compuestos |
+
+**Flujo de migración recomendado:**
+
+```
+1. Crear models/database.py con configuración de SQLite
+2. Crear repositories/sqlite_*.py (copy-paste de repositories actuales)
+3. Modificar repositories para usar SQLite en lugar de JSON
+4. Cambiar main.py: reemplazar JSON repos por SQLite repos
+5. Probar que todo funciona igual
+6. Eliminar archivos JSON y configuración JSON antigua
+```
+
+---
+
+## 11. Flujo de Uso del Sistema
 
 ### Caso 1: Crear una factura
 
