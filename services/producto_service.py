@@ -76,3 +76,56 @@ class ProductoService:
                 actualizados += 1
         
         return actualizados
+
+    def export_to_excel(self, filepath):
+        """
+        Exporta todos los productos a un archivo Excel (.xlsx).
+        
+        Args:
+            filepath: Ruta completa del archivo Excel a crear
+        
+        Returns:
+            True si la exportación fue exitosa
+        
+        Raises:
+            ValueError: Si no hay productos para exportar
+        """
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, numbers
+        
+        productos = self.get_all_products()
+        
+        if not productos:
+            raise ValueError("No hay productos para exportar")
+        
+        # Crear workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Productos"
+        
+        # Crear headers
+        headers = ["Código", "Descripción", "Precio", "Precio Recomendado (+80%)"]
+        ws.append(headers)
+        
+        # Aplicar negrita a headers
+        for cell in ws[1]:
+            cell.font = Font(bold=True)
+        
+        # Agregar datos de productos
+        for producto in productos:
+            precio_recomendado = self.get_precio_recomendado(producto.precio)
+            ws.append([
+                producto.codigo,
+                producto.descripcion,
+                producto.precio,
+                precio_recomendado
+            ])
+        
+        # Aplicar formato de moneda a columnas de precio
+        for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=3, max_col=4):
+            for cell in row:
+                cell.number_format = '$#,##0.00'
+        
+        # Guardar archivo
+        wb.save(filepath)
+        return True

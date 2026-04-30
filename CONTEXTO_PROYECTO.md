@@ -1,6 +1,6 @@
 # CONTEXTO_PROYECTO.md - Sistema de Facturación
 
-**Versión:** 1.4  
+**Versión:** 1.5  
 **Última actualización:** 29 de abril de 2026  
 **Estado:** Activo y en desarrollo
 
@@ -112,6 +112,7 @@ Desarrollar una herramienta de facturación simple y funcional que:
 - ✅ Editar producto
 - ✅ Eliminar producto
 - ✅ Listar productos con buscador/filtro
+- ✅ Exportar todos los productos a Excel (.xlsx)
 
 **Notas importantes:**
 - El precio es el precio actual en catálogo
@@ -122,6 +123,7 @@ Desarrollar una herramienta de facturación simple y funcional que:
   - No es editable, se actualiza automáticamente cuando cambia el precio unitario
   - Aparece con formato moneda ($)
   - **Lógica centralizada en ProductoService.get_precio_recomendado()** para facilitar migraciones a BD
+- **Exportación a Excel:** Botón "Exportar a Excel" permite descargar todos los productos en formato .xlsx incluyendo precio recomendado
 
 ### 5.3 Gestión de Facturas
 
@@ -284,6 +286,44 @@ def apply_price_increase(self, producto_codigos, porcentaje):
     #   redondear a 2 decimales
     #   actualizar en repository
 ```
+
+### 5.6 Exportación de Productos a Excel
+
+**Pantalla:** ProductosView - Botón "Exportar a Excel"
+
+**Objetivo:** Exportar todos los productos a un archivo Excel (.xlsx) para análisis externo, reportes o integración con otros sistemas.
+
+**Campos exportados:**
+- Código
+- Descripción  
+- Precio (precio unitario actual)
+- Precio Recomendado (calculado automáticamente como +80%)
+
+**Características:**
+- ✅ Headers con formato negrita
+- ✅ Exporta TODOS los productos (no solo los filtrados)
+- ✅ Incluye precio recomendado calculado automáticamente
+- ✅ Permite elegir nombre y ubicación del archivo
+- ✅ Validación: si no hay productos → mensaje "No hay productos para exportar"
+- ✅ Confirmación: muestra mensaje de éxito al finalizar
+- ✅ Formato: Archivo .xlsx (Excel moderno)
+
+**Flujo:**
+1. Usuario hace clic en "Exportar a Excel"
+2. Sistema valida si hay productos
+3. Abre diálogo de guardado (guardar archivo)
+4. Usuario elige nombre y ubicación
+5. Sistema genera archivo Excel con todos los productos
+6. Muestra mensaje "Exportación realizada con éxito"
+
+**Lógica de negocio (ProductoService.export_to_excel):**
+- Obtiene todos los productos via `get_all_products()`
+- Para cada producto, calcula `get_precio_recomendado(precio)`
+- Genera workbook con openpyxl
+- Guarda archivo en ubicación especificada
+
+**Dependencias:**
+- Librería: `openpyxl` (para generar archivos Excel)
 
 ---
 
@@ -724,6 +764,45 @@ El código está diseñado y centralizado para facilitar la migración a SQLite 
 ## 13. Cambios Recientes
 
 Este registro mantiene un histórico de cambios significativos para referencia futura.
+
+### 2026-04-29 - Exportación de Productos a Excel (.xlsx)
+
+**Cambios:**
+- ✅ Nueva funcionalidad: Exportar todos los productos a archivo Excel
+- ✅ Botón "Exportar a Excel" agregado en ProductosView
+- ✅ Nuevo método en ProductoService: `export_to_excel(filepath)`
+- ✅ Headers en negrita: Código, Descripción, Precio, Precio Recomendado
+- ✅ Exporta TODOS los productos (no solo los filtrados)
+- ✅ Incluye precio recomendado (+80%) calculado automáticamente
+- ✅ Validación: Muestra "No hay productos para exportar" si está vacío
+- ✅ Confirmación: Muestra "Exportación realizada con éxito" al finalizar
+- ✅ Formato: .xlsx (Excel moderno con openpyxl)
+
+**Archivos creados:**
+- Ninguno nuevo (solo modificaciones)
+
+**Archivos modificados:**
+- `services/producto_service.py` (nuevo método export_to_excel)
+- `ui/productos_view.py` (botón y método exportar_a_excel)
+- `CONTEXTO_PROYECTO.md` (documentación)
+
+**Dependencias agregadas:**
+- `openpyxl` (para generar archivos Excel)
+
+**Estado:** Funcionalidad completamente operativa
+
+**Notas técnicas:**
+- El service accede a datos via `get_all_products()`
+- Precio recomendado se calcula usando `get_precio_recomendado()`
+- Mantiene separación de capas: UI → Service → Repository
+- Compatible con futura migración a SQLite
+
+**Cómo usar:**
+1. En ProductosView, hacer clic en botón "Exportar a Excel"
+2. Elegir ubicación y nombre del archivo
+3. Se genera .xlsx con todos los productos
+
+---
 
 ### 2026-04-11 - Gestión de Pagos: ID autonumérico e integración con saldo
 

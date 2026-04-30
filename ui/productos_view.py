@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 from models import Producto
 
 class ProductosView(ttk.Frame):
@@ -17,6 +17,7 @@ class ProductosView(ttk.Frame):
         self.btn_editar.pack(side="left", padx=5)
         self.btn_eliminar = ttk.Button(btn_frame, text="Eliminar Producto", command=self.eliminar_producto, state="disabled", style="Danger.TButton")
         self.btn_eliminar.pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Exportar a Excel", command=self.exportar_a_excel).pack(side="left", padx=5)
 
         
         search_frame = ttk.Frame(self)
@@ -122,6 +123,35 @@ class ProductosView(ttk.Frame):
         if messagebox.askyesno("Confirmar", f"¿Eliminar producto {codigo_producto}?"):
             self.controller.producto_service.delete_product(codigo_producto)
             self.actualizar_lista()
+
+    def exportar_a_excel(self):
+        """Exporta todos los productos a un archivo Excel (.xlsx)"""
+        try:
+            # Obtener todos los productos
+            productos = self.controller.producto_service.get_all_products()
+            
+            # Validar si hay productos
+            if not productos:
+                messagebox.showwarning("Sin datos", "No hay productos para exportar")
+                return
+            
+            # Abrir diálogo de guardado
+            filepath = filedialog.asksaveasfilename(
+                defaultextension=".xlsx",
+                filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
+                initialfile="productos.xlsx"
+            )
+            
+            # Si el usuario cancela
+            if not filepath:
+                return
+            
+            # Exportar a Excel
+            self.controller.producto_service.export_to_excel(filepath)
+            messagebox.showinfo("Éxito", "Exportación realizada con éxito")
+            
+        except Exception as e:
+            messagebox.showerror("Error en exportación", f"Error: {str(e)}")
 
 class FormProducto(tk.Toplevel):
     def __init__(self, parent, controller, producto=None):
