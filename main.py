@@ -22,8 +22,10 @@ from services.producto_service import ProductoService
 from services.factura_service import FacturaService
 from services.pago_service import PagoService
 
+from database import Database
+
 def setup_temporary_data():
-    """Crea archivos de datos temporales si no existen para demostración."""
+    """Crea archivos de datos temporales si no existen para demostración (compatible con migración)."""
     if not os.path.exists("data"):
         os.makedirs("data")
 
@@ -33,8 +35,8 @@ def setup_temporary_data():
 
     if not os.path.exists("data/clientes.json"):
         clientes = [
-            {"codigo": "C001", "nombre": "Consumidor Final", "adicional": "", "descuento": 0, "saldo": 0.0},
-            {"codigo": "C002", "nombre": "Juan Perez", "adicional": "RUC: 12345678-9", "descuento": 5, "saldo": 0.0},
+            {"codigo": "C001", "nombre": "Consumidor Final", "adicional": "", "descuento_1": False, "descuento_2": False, "saldo": 0.0},
+            {"codigo": "C002", "nombre": "Juan Perez", "adicional": "RUC: 12345678-9", "descuento_1": False, "descuento_2": False, "saldo": 0.0},
         ]
         with open("data/clientes.json", "w") as f:
             json.dump(clientes, f, indent=4)
@@ -46,6 +48,60 @@ def setup_temporary_data():
         ]
         with open("data/productos.json", "w") as f:
             json.dump(productos, f, indent=4)
+
+def migrate_data_if_needed(db, cliente_repo, producto_repo, factura_repo, pago_repo):
+    """
+    Migra datos de JSON a SQLite si es necesario.
+    Esto permite la migración gradual sin perder datos existentes.
+    """
+    try:
+        with db.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Verificar si BD está vacía
+            cursor.execute('SELECT COUNT(*) as count FROM PRODUCTOS')
+            count = cursor.fetchone()['count']
+            
+            if count > 0:
+                # BD ya tiene datos, no necesita migración
+                return
+        
+        # Migrar productos
+        if os.path.exists("data/productos.json"):
+            try:
+                with open("data/productos.json", "r") as f:
+                    productos_data = json.load(f)
+                    from models import Producto
+                    for p_data in productos_data:
+                        p = Producto(p_data['codigo'], p_data['descripcion'], p_data['precio'])
+                        producto_repo.add(p)
+            except Exception as e:
+                print(f"Warning: No se pudieron migrar productos: {e}")
+        
+        # Migrar clientes
+        if os.path.exists("data/clientes.json"):
+            try:
+                with open("data/clientes.json", "r") as f:
+                    clientes_data = json.load(f)
+                    from models import Cliente
+                    for c_data in clientes_data:
+                        c = Cliente(
+                            c_data['codigo'],
+                            c_data['nombre'],
+                            c_data.get('adicional', ''),
+                            c_data.get('descuento_1', False),
+                            c_data.get('descuento_2', False),
+                            c_data.get('saldo', 0.0)
+                        )
+                        cliente_repo.add(c)
+            except Exception as e:
+                print(f"Warning: No se pudieron migrar clientes: {e}")
+        
+        # Nota: Las facturas y pagos requieren referencias a clientes y productos,
+        # así que se pueden migrar si es necesario más adelante.
+        
+    except Exception as e:
+        print(f"Warning: Error durante la migración de datos: {e}")
 
 class App(tk.Tk):
     def __init__(self):
@@ -92,11 +148,17 @@ class App(tk.Tk):
         self.style.map("Accent.TButton", background=[("active", "#229954")])
         
     def _initialize_services(self):
-        # Repositories - ClienteRepository debe cargarse primero
-        cliente_repo = ClienteRepository()
-        producto_repo = ProductoRepository()
-        factura_repo = FacturaRepository(cliente_repo, producto_repo)
-        pago_repo = PagoRepository(cliente_repo)  # Inyectar cliente_repo
+        # Inicializar BD SQLite
+        db = Database("database.db")
+        
+        # Repositories - pasar instancia de BD
+        cliente_repo = ClienteRepository(db=db)
+        producto_repo = ProductoRepository(db=db)
+        factura_repo = FacturaRepository(cliente_repo, producto_repo, db=db)
+        pago_repo = PagoRepository(cliente_repo, db=db)
+        
+        # Migrar datos de JSON a SQLite si es necesario (una sola vez)
+        migrate_data_if_needed(db, cliente_repo, producto_repo, factura_repo, pago_repo)
         
         # Services - store them on the controller
         self.cliente_service = ClienteService(cliente_repo)

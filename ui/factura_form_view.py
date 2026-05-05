@@ -8,6 +8,7 @@ class FacturaFormView(ttk.Frame):
         self.controller = controller
         self.factura_actual = None
         self.editing = False
+        self.total_factura_original = 0  # Para ediciones: guardar el total original
         self._build_widgets()
 
     def on_show(self, context=None):
@@ -78,6 +79,8 @@ class FacturaFormView(ttk.Frame):
         self.lbl_subtotal = ttk.Label(total_frame, text="Subtotal: $0.00", font=("", 12)); self.lbl_subtotal.pack(anchor="w")
         self.lbl_total_descuento = ttk.Label(total_frame, text="Descuento: $0.00", font=("", 12)); self.lbl_total_descuento.pack(anchor="w")
         self.lbl_total = ttk.Label(total_frame, text="TOTAL: $0.00", font=("", 14, "bold")); self.lbl_total.pack(anchor="w", pady=5)
+        ttk.Separator(total_frame, orient="horizontal").pack(fill="x", pady=5)
+        self.lbl_total_con_saldo = ttk.Label(total_frame, text="Total con Saldo: $0.00", font=("", 12, "bold"), foreground="#e74c3c"); self.lbl_total_con_saldo.pack(anchor="w", pady=5)
 
         right_frame = ttk.Frame(main_frame); right_frame.grid(row=0, column=1, rowspan=3, sticky="nsew")
         right_frame.rowconfigure(1, weight=1)
@@ -232,13 +235,26 @@ class FacturaFormView(ttk.Frame):
                 self.lbl_total_descuento.config(text="Descuentos: $0.00")
             else:
                 self.lbl_total_descuento.config(text=f"Descuentos: ${descuento_valor:.2f} ({desc_desc})")
+            
+            # Total con Saldo: mostrar el saldo resultante si se guarda la factura
+            if not self.editing:
+                # Crear nueva: Saldo actual + Total factura nueva
+                total_con_saldo = self.factura_actual.total + self.factura_actual.cliente.saldo
+                self.lbl_total_con_saldo.config(text=f"Total con Saldo: ${total_con_saldo:.2f}")
+            else:
+                # Editar existente: (Saldo actual - Total original) + Total nuevo
+                # Esto muestra cuál será el saldo después de re-guardar los cambios
+                saldo_sin_factura = self.factura_actual.cliente.saldo - self.total_factura_original
+                total_con_saldo = saldo_sin_factura + self.factura_actual.total
+                self.lbl_total_con_saldo.config(text=f"Total con Saldo: ${total_con_saldo:.2f}")
         else:
             self.lbl_total_descuento.config(text="Descuentos: $0.00")
+            self.lbl_total_con_saldo.config(text="Total con Saldo: $0.00")
         
         self.lbl_total.config(text=f"TOTAL: ${self.factura_actual.total:.2f}")
 
     def limpiar_formulario(self):
-        self.factura_actual = None; self.editing = False
+        self.factura_actual = None; self.editing = False; self.total_factura_original = 0
         self.cliente_search_var.set(""); self.producto_search_var.set(""); self.repartidor_var.set("")
         self.dia_reparto_var.set("")
         self.cliente_listbox.pack_forget(); self.producto_listbox.pack_forget()
@@ -246,9 +262,13 @@ class FacturaFormView(ttk.Frame):
         self.lbl_precio_unitario.config(text="Precio: -"); self.cantidad_var.set(1)
         self.items_tree.delete(*self.items_tree.get_children())
         self.lbl_subtotal.config(text="Subtotal: $0.00"); self.lbl_total_descuento.config(text="Descuento: $0.00")
-        self.lbl_total.config(text="TOTAL: $0.00"); self.cliente_search.config(state="normal")
+        self.lbl_total.config(text="TOTAL: $0.00"); self.lbl_total_con_saldo.config(text="Total con Saldo: $0.00"); self.cliente_search.config(state="normal")
 
     def cargar_factura(self):
+        # Guardar el total original para cálculos al editar
+        self.factura_actual.calcular_totales()
+        self.total_factura_original = self.factura_actual.total
+        
         if self.factura_actual.cliente:
             cliente = self.factura_actual.cliente
             self.cliente_search_var.set(f"{cliente.codigo} - {cliente.nombre}")

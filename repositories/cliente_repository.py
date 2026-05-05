@@ -1,58 +1,136 @@
 # repositories/cliente_repository.py
-import json
 from models import Cliente
+from database import Database
 
 class ClienteRepository:
-    def __init__(self, filepath="data/clientes.json"):
-        self.filepath = filepath
-        self.clientes = self._load()
-
-    def _load(self):
-        try:
-            with open(self.filepath, "r") as f:
-                data = json.load(f)
-                return [Cliente.from_dict(c) for c in data]
-        except (FileNotFoundError, json.JSONDecodeError):
-            # If the file doesn't exist or is empty, start with an empty list
-            return []
-
-    def _save(self):
-        with open(self.filepath, "w") as f:
-            json.dump([c.to_dict() for c in self.clientes], f, indent=4)
+    def __init__(self, db=None):
+        """
+        Inicializa el repositorio de clientes con SQLite.
+        
+        Args:
+            db: Instancia de Database. Si es None, obtiene la instancia singleton.
+        """
+        self.db = db if db is not None else Database()
 
     def get_all(self):
-        return self.clientes
+        """Obtiene todos los clientes desde la BD."""
+        clientes = []
+        with self.db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT id, codigo, nombre, dato_adicional, descuento_1, descuento_2, saldo FROM CLIENTES ORDER BY codigo')
+            rows = cursor.fetchall()
+            for row in rows:
+                cliente = Cliente(
+                    codigo=row['codigo'],
+                    nombre=row['nombre'],
+                    adicional=row['dato_adicional'],
+                    descuento_1=bool(row['descuento_1']),
+                    descuento_2=bool(row['descuento_2']),
+                    saldo=row['saldo']
+                )
+                clientes.append(cliente)
+        return clientes
 
     def get_by_code(self, codigo):
+        """Obtiene un cliente por su código."""
         codigo_normalizado = codigo.upper()
-        return next((c for c in self.clientes if c.codigo == codigo_normalizado), None)
+        with self.db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT id, codigo, nombre, dato_adicional, descuento_1, descuento_2, saldo FROM CLIENTES WHERE UPPER(codigo) = ?', 
+                         (codigo_normalizado,))
+            row = cursor.fetchone()
+            if row:
+                return Cliente(
+                    codigo=row['codigo'],
+                    nombre=row['nombre'],
+                    adicional=row['dato_adicional'],
+                    descuento_1=bool(row['descuento_1']),
+                    descuento_2=bool(row['descuento_2']),
+                    saldo=row['saldo']
+                )
+        return None
+
+    def get_by_code_with_id(self, codigo):
+        """Obtiene un cliente y su ID interno de BD por su código."""
+        codigo_normalizado = codigo.upper()
+        with self.db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT id, codigo, nombre, dato_adicional, descuento_1, descuento_2, saldo FROM CLIENTES WHERE UPPER(codigo) = ?', 
+                         (codigo_normalizado,))
+            row = cursor.fetchone()
+            if row:
+                cliente = Cliente(
+                    codigo=row['codigo'],
+                    nombre=row['nombre'],
+                    adicional=row['dato_adicional'],
+                    descuento_1=bool(row['descuento_1']),
+                    descuento_2=bool(row['descuento_2']),
+                    saldo=row['saldo']
+                )
+                return cliente, row['id']
+        return None, None
 
     def add(self, cliente):
+        """Agrega un nuevo cliente a la BD."""
         if self.get_by_code(cliente.codigo):
-            # Or raise an exception, depending on desired error handling
-            return False 
-        self.clientes.append(cliente)
-        self._save()
-        return True
+            return False
+        
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO CLIENTES (codigo, nombre, dato_adicional, descuento_1, descuento_2, saldo) 
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ''', (
+                    cliente.codigo,
+                    cliente.nombre,
+                    cliente.adicional,
+                    int(cliente.descuento_1),
+                    int(cliente.descuento_2),
+                    cliente.saldo
+                ))
+                conn.commit()
+            return True
+        except Exception:
+            return False
 
     def update(self, codigo, nombre, adicional, descuento_1, descuento_2, saldo):
+        """Actualiza un cliente existente."""
         codigo_normalizado = codigo.upper()
-        cliente = self.get_by_code(codigo_normalizado)
-        if cliente:
-            cliente.nombre = nombre
-            cliente.adicional = adicional
-            cliente.descuento_1 = descuento_1
-            cliente.descuento_2 = descuento_2
-            cliente.saldo = saldo
-            self._save()
-            return True
-        return False
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    UPDATE CLIENTES 
+                    SET nombre = ?, dato_adicional = ?, descuento_1 = ?, descuento_2 = ?, saldo = ? 
+                    WHERE UPPER(codigo) = ?
+                ''', (nombre, adicional, int(descuento_1), int(descuento_2), saldo, codigo_normalizado))
+                conn.commit()
+                return cursor.rowcount > 0
+        except Exception:
+            return False
 
     def delete(self, codigo):
+        """Elimina un cliente por su código."""
         codigo_normalizado = codigo.upper()
-        cliente = self.get_by_code(codigo_normalizado)
-        if cliente:
-            self.clientes.remove(cliente)
-            self._save()
-            return True
-        return False
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('DELETE FROM CLIENTES WHERE UPPER(codigo) = ?', (codigo_normalizado,))
+                conn.commit()
+                return cursor.rowcount > 0
+        except Exception:
+            return False
+
+    def update_saldo(self, codigo, nuevo_saldo):
+        """Actualiza solo el saldo de un cliente."""
+        codigo_normalizado = codigo.upper()
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('UPDATE CLIENTES SET saldo = ? WHERE UPPER(codigo) = ?', 
+                             (nuevo_saldo, codigo_normalizado))
+                conn.commit()
+                return cursor.rowcount > 0
+        except Exception:
+            return False
